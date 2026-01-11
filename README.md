@@ -6,7 +6,10 @@ This repository documents a self-hosted home lab running on a **Raspberry Pi 4 (
 
 We use **Traefik** as the central entry point (Reverse Proxy) which automatically manages SSL certificates. Since our ISP provides a dynamic IP, a **DDNS script** ensures our domain always points to the correct home address.
 
-```flowchart LR
+
+```mermaid
+
+flowchart LR
     %% --- Base Styles for a Clean, White Theme ---
     %% General Node Style: White fill, colored borders, dark text
     classDef baseNode fill:white,stroke-width:2px,color:#1F2937,rx:8,ry:8,font-family:sans-serif
