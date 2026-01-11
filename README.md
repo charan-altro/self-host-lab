@@ -11,8 +11,8 @@ We use **Traefik** as the central entry point (Reverse Proxy) which automaticall
 %%{init: {'theme': 'base', 'themeVariables': { 'background': '#ffffff', 'mainBkg': '#ffffff', 'primaryTextColor': '#1e293b'}}}%%
 flowchart TB
     %% --- GLOBAL PROFESSIONAL STYLES ---
-    %% 1. Basic Node Style (Clean white, dark gray text, subtle rounded corners)
-    classDef base fill:#ffffff,stroke:#CBD5E1,stroke-width:1px,color:#1E293B,rx:4,ry:4,font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif
+    %% 1. Basic Node Style
+    classDef base fill:#ffffff,stroke:#CBD5E1,stroke-width:1px,color:#1E293B,rx:4,ry:4,font-family:Arial,sans-serif
 
     %% 2. Client/Endpoint Style (Deep Corporate Blue)
     classDef client fill:#ffffff,stroke:#1E3A8A,stroke-width:2px,color:#1E3A8A,rx:4,ry:4,font-weight:bold
@@ -20,13 +20,11 @@ flowchart TB
     %% 3. Active Routing Path Style (Vibrant Professional Orange)
     classDef transit fill:#ffffff,stroke:#EA580C,stroke-width:2px,color:#1E293B,rx:4,ry:4
 
-    %% 4. The App List Box (Subtle Off-White fill to distinguish content)
+    %% 4. The App List Box (Subtle Off-White)
     classDef listBox fill:#F8FAFC,stroke:#1E3A8A,stroke-width:1px,color:#1E293B,rx:4,ry:4,align:left
 
-    %% --- CONTAINER STYLES (Cool Gray for Professional Zones) ---
-    %% Dashed Gray for Network Zone
+    %% --- CONTAINER STYLES ---
     classDef networkContainer fill:#ffffff,stroke:#64748B,stroke-width:2px,stroke-dasharray: 6 4,color:#64748B
-    %% Solid Gray for Server Zone
     classDef serverContainer fill:#F1F5F9,stroke:#64748B,stroke-width:2px,color:#64748B
 
     %% --- DIAGRAM STRUCTURE ---
@@ -46,27 +44,28 @@ flowchart TB
     %% 3. BOTTOM: Server Zone
     subgraph Server ["Raspberry Pi 4 - Docker Host"]
         direction TB
-        %% Compacted List Box with refined formatting
-        DockerList["🐳 **Docker Service Stack**
-        Isolating applications via containerization.
+        %% Fixed string formatting for better compatibility
+        DockerList["🐳 Docker Service Stack
+        Isolating applications via containerization
         ____________________________________
-        🖥️ **Homepage** | Dashboard
-        🎬 **Jellyfin** | Media Server
-        📁 **Nextcloud** | Secure Storage
-        🛡️ **Pi-hole** | DNS AdBlocking
-        🔒 **Tailscale** | Mesh VPN"]:::listBox
+        🖥️ Homepage | Dashboard
+        🎬 Jellyfin | Media Server
+        📁 Nextcloud | Secure Storage
+        🛡️ Pi-hole | DNS AdBlocking
+        🔒 Tailscale | Mesh VPN"]:::listBox
     end
 
     %% --- CONNECTIONS (High Contrast) ---
+    %% Quoted labels to prevent syntax errors
     
     %% Main Active Flow (Thick Orange)
-    User ==>|HTTPS Request (443)| DNS
-    DNS ==>|Resolve Public IP| Router
-    Router ==>|Port Forward| Traefik
-    Traefik ==>|Secure Route| DockerList
+    User ==>|"HTTPS Request (443)"| DNS
+    DNS ==>|"Resolve Public IP"| Router
+    Router ==>|"Port Forward"| Traefik
+    Traefik ==>|"Secure Route"| DockerList
 
     %% Maintenance Flow (Dashed Gray)
-    DDNS -.-o|API Update| DNS
+    DDNS -.-o|"API Update"| DNS
 
     %% --- APPLY STYLES ---
     class Routing networkContainer
