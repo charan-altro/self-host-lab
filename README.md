@@ -15,17 +15,17 @@ We use **Traefik** as the central entry point (Reverse Proxy) which automaticall
     'primaryTextColor': '#1F2937',
     'lineColor': '#64748B',
     'fontSize': '14px'
+  },
+  'flowchart': {
+    'rankSpacing': 15,
+    'nodeSpacing': 15
   }
 }}%%
 flowchart LR
     %% --- STYLE DEFINITIONS ---
     classDef base fill:#FFFFFF,stroke:#CBD5E1,stroke-width:1px,color:#1F2937,rx:4,ry:4,shadow:true
     classDef client fill:#FFFFFF,stroke:#2563EB,stroke-width:2px,color:#1E3A8A,rx:4,ry:4,font-weight:bold,shadow:true
-    
-    %% The Network Stack Style (Orange Border, centered text)
     classDef netStack fill:#FFFFFF,stroke:#EA580C,stroke-width:2px,color:#1F2937,rx:4,ry:4,shadow:true,align:center
-    
-    %% The App Stack Style (Blue Border, left aligned)
     classDef appStack fill:#F8FAFC,stroke:#2563EB,stroke-width:1px,color:#1E293B,rx:4,ry:4,align:left,font-family:monospace
 
     %% --- CONTAINER STYLING ---
@@ -44,11 +44,9 @@ flowchart LR
             DDNS["🔄 DDNS Updater"]:::base
         end
 
-        %% 2. MIDDLE: Network Stack (FORCED VERTICAL VIA HTML)
+        %% 2. MIDDLE: Network Stack (Single Node for Vertical Layout)
         subgraph Network ["☁️ Network Layer"]
             direction TB
-            %% This node uses HTML <br> tags to force the vertical look
-            %% It simulates the stack perfectly in a single box
             NetStack["🌐 <b>Cloudflare DNS</b>
             ⬇️ <i>(Home IP)</i>
             🏠 <b>Home Router</b>
@@ -70,13 +68,8 @@ flowchart LR
 
     %% --- CONNECTIONS ---
     
-    %% User hits the Network Stack
-    User ==>|"HTTPS Request"| NetStack
-    
-    %% Network Stack hits the Server
-    NetStack ==>|"Secure Route"| Docker
-
-    %% Maintenance Path
+    User ==>|"HTTPS"| NetStack
+    NetStack ==>|"Route"| Docker
     DDNS -.-o|"Update IP"| NetStack
 
     %% --- APPLY STYLES ---
