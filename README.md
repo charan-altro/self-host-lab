@@ -16,69 +16,108 @@ We use **Traefik** as the central entry point (Reverse Proxy) which automaticall
     'lineColor': '#64748B',
     'fontSize': '14px'
   },
-  'flowchart': {
-    'rankSpacing': 15,
-    'nodeSpacing': 15
-  }
+  'flowchart': { 'rankSpacing': 20, 'nodeSpacing': 20 }
 }}%%
 flowchart LR
-    %% --- STYLE DEFINITIONS ---
+    %% --- STYLES ---
     classDef base fill:#FFFFFF,stroke:#CBD5E1,stroke-width:1px,color:#1F2937,rx:4,ry:4,shadow:true
+    classDef script fill:#F8FAFC,stroke:#2563EB,stroke-width:1px,color:#1E3A8A,rx:4,ry:4,font-family:monospace,align:left
+    classDef cloud fill:#FFFFFF,stroke:#EA580C,stroke-width:2px,color:#1F2937,rx:4,ry:4,shadow:true
+
+    %% --- STRUCTURE ---
+    subgraph Maintenance ["🛠️ DDNS Synchronization Loop"]
+        direction LR
+        
+        %% RASPBERRY PI SIDE
+        subgraph Pi ["Raspberry Pi 4"]
+            direction TB
+            DDNS_Script["🐍 <b>DDNS Script</b>
+            ──────────────
+            1. Check Public IP
+            2. Compare with DNS
+            3. If Changed: Update"]:::script
+        end
+
+        %% CLOUDFLARE SIDE
+        subgraph Cloud ["Cloudflare Cloud"]
+            direction TB
+            API["☁️ <b>Cloudflare API</b>
+            ──────────────
+            Updates 'A' Record
+            points to New IP"]:::cloud
+        end
+    end
+
+    %% --- LOGIC FLOW ---
+    DDNS_Script ==>|"Periodic Check (Cron)"| API
+    API -.->|"Confirm Update"| DDNS_Script
+
+    %% --- STYLES ---
+    class Maintenance masterZone
+    
+    %% Styles
+    classDef masterZone fill:#F5F7FA,stroke:#E2E8F0,stroke-width:1px,rx:10,ry:10,color:#334155
+    linkStyle 0 stroke:#2563EB,stroke-width:3px
+    linkStyle 1 stroke:#94A3B8,stroke-width:2px,stroke-dasharray: 4 4
+```
+
+```mermaid
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'background': '#F5F7FA',
+    'primaryTextColor': '#1F2937',
+    'lineColor': '#64748B',
+    'fontSize': '14px'
+  },
+  'flowchart': { 'rankSpacing': 15, 'nodeSpacing': 15 }
+}}%%
+flowchart LR
+    %% --- STYLES ---
     classDef client fill:#FFFFFF,stroke:#2563EB,stroke-width:2px,color:#1E3A8A,rx:4,ry:4,font-weight:bold,shadow:true
     classDef netStack fill:#FFFFFF,stroke:#EA580C,stroke-width:2px,color:#1F2937,rx:4,ry:4,shadow:true,align:center
     classDef appStack fill:#F8FAFC,stroke:#2563EB,stroke-width:1px,color:#1E293B,rx:4,ry:4,align:left,font-family:monospace
-
-    %% --- CONTAINER STYLING ---
-    classDef masterZone fill:#F5F7FA,stroke:#E2E8F0,stroke-width:1px,rx:10,ry:10,color:#334155
-    classDef innerZone fill:#FFFFFF,stroke:#94A3B8,stroke-width:1px,stroke-dasharray: 6 4,color:#475569
-
-    %% --- DIAGRAM CONTENT ---
-
-    subgraph HomeLab ["🏠 Self-Hosted Architecture"]
+    
+    %% --- STRUCTURE ---
+    subgraph Traffic ["🌐 Secure Data Traffic Flow"]
         direction LR
 
-        %% 1. LEFT: Inputs
-        subgraph Inputs ["Clients"]
-            direction TB
-            User["💻 Client / User"]:::client
-            DDNS["🔄 DDNS Updater"]:::base
-        end
+        %% 1. USER
+        User["💻 <b>User / Client</b>
+        <i>(External Request)</i>"]:::client
 
-        %% 2. MIDDLE: Network Stack (Single Node for Vertical Layout)
-        subgraph Network ["☁️ Network Layer"]
-            direction TB
-            NetStack["🌐 <b>Cloudflare DNS</b>
-            ⬇️ <i>(Home IP)</i>
+        %% 2. NETWORK STACK (Forced Vertical)
+        subgraph NetLayer ["Network Path"]
+            Stack["🌐 <b>Cloudflare DNS</b>
+            ⬇️ <i>(Resolve IP)</i>
             🏠 <b>Home Router</b>
-            ⬇️ <i>(Port 443)</i>
+            ⬇️ <i>(Port Forward 443)</i>
             🚦 <b>Traefik Proxy</b>"]:::netStack
         end
 
-        %% 3. RIGHT: Server
-        subgraph Server ["Raspberry Pi 4"]
-            direction TB
-            Docker["🐳 Docker Apps
-            ──────────────
+        %% 3. APPS
+        subgraph Server ["Docker Host"]
+            Apps["🐳 <b>Docker Apps</b>
+            ─────────────
             🖥️ Dashboard
-            🎬 Media Server
-            📁 Personal Cloud
-            🛡️ DNS & VPN"]:::appStack
+            🎬 Media
+            📁 Storage
+            🛡️ DNS/VPN"]:::appStack
         end
     end
 
     %% --- CONNECTIONS ---
+    User ==>|"HTTPS (443)"| Stack
+    Stack ==>|"Secure Route"| Apps
+
+    %% --- STYLES ---
+    linkStyle 0,1 stroke:#EA580C,stroke-width:3px
     
-    User ==>|"HTTPS"| NetStack
-    NetStack ==>|"Route"| Docker
-    DDNS -.-o|"Update IP"| NetStack
-
-    %% --- APPLY STYLES ---
-    class HomeLab masterZone
-    class Inputs,Network,Server innerZone
-
-    %% Link Styling
-    linkStyle 0,1 stroke:#EA580C,stroke-width:3px,fill:none
-    linkStyle 2 stroke:#94A3B8,stroke-width:2px,stroke-dasharray: 4 4
+    %% Container Style
+    classDef masterZone fill:#F5F7FA,stroke:#E2E8F0,stroke-width:1px,rx:10,ry:10,color:#334155
+    class Traffic masterZone
+    class NetLayer,Server innerZone
+    classDef innerZone fill:#FFFFFF,stroke:#94A3B8,stroke-width:1px,stroke-dasharray: 6 4
 ```
 
 ## 🌐 Connectivity Logic
