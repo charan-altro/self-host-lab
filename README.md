@@ -34,14 +34,14 @@ flowchart LR
     subgraph HomeLab ["🏠 Self-Hosted Architecture"]
         direction LR
 
-        %% 1. LEFT: Inputs
+        %% 1. LEFT COLUMN: Inputs
         subgraph Inputs ["Clients"]
             direction TB
             User["💻 Client / User"]:::client
             DDNS["🔄 DDNS Updater"]:::base
         end
 
-        %% 2. MIDDLE: Network Stack (VERTICAL as requested)
+        %% 2. MIDDLE COLUMN: Network Stack (Strictly Vertical)
         subgraph Network ["☁️ Network Layer"]
             direction TB
             DNS["🌐 Cloudflare DNS"]:::transit
@@ -49,7 +49,7 @@ flowchart LR
             Traefik["🚦 Traefik Proxy"]:::transit
         end
 
-        %% 3. RIGHT: Server
+        %% 3. RIGHT COLUMN: Server
         subgraph Server ["Raspberry Pi 4"]
             direction TB
             Docker["🐳 Docker Apps
@@ -63,17 +63,17 @@ flowchart LR
 
     %% --- CONNECTIONS ---
     
-    %% 1. User hits Cloudflare (Top of Stack)
+    %% 1. ENTRANCE: Left to Right -> Top of Stack
     User ==>|"HTTPS"| DNS
     
-    %% 2. The Vertical Stack Flow (Downwards)
+    %% 2. THE DROP: Top to Bottom inside the stack
     DNS ==>|"Home IP"| Router
     Router ==>|"Port 443"| Traefik
     
-    %% 3. Traefik hits Server (Rightwards)
+    %% 3. EXIT: Left to Right -> Bottom of Stack to Server
     Traefik ==>|"Route"| Docker
 
-    %% 4. Maintenance (Side loop)
+    %% 4. MAINTENANCE: Side Loop
     DDNS -.-o|"Update IP"| DNS
 
     %% --- APPLY STYLES ---
@@ -81,9 +81,9 @@ flowchart LR
     class Inputs,Network,Server innerZone
 
     %% Link Styling
-    %% 0,1,2,3 are the Orange Data Path
+    %% Orange for Data Path
     linkStyle 0,1,2,3 stroke:#EA580C,stroke-width:3px,fill:none
-    %% 4 is the Grey Helper Path
+    %% Grey for Helper
     linkStyle 4 stroke:#94A3B8,stroke-width:2px,stroke-dasharray: 4 4
 ```
 
