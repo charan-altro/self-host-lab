@@ -11,58 +11,65 @@ We use **Traefik** as the central entry point (Reverse Proxy) which automaticall
 %%{init: {
   'theme': 'base',
   'themeVariables': {
-    'background': '#F5F7FA',
-    'mainBkg': '#F5F7FA',
+    'background': '#FFFFFF',
     'primaryTextColor': '#1F2937',
     'lineColor': '#64748B'
   }
 }}%%
 flowchart TB
     %% --- STYLE DEFINITIONS ---
-    %% 1. White Card Style for Nodes (Pops against the grey background)
+    %% 1. White Nodes (Clean white boxes)
     classDef base fill:#FFFFFF,stroke:#CBD5E1,stroke-width:1px,color:#1F2937,rx:5,ry:5,font-family:sans-serif
-
-    %% 2. Blue Accents (Client & Server)
+    
+    %% 2. Blue Accents (Endpoints)
     classDef client fill:#FFFFFF,stroke:#2563EB,stroke-width:2px,color:#1E3A8A,rx:5,ry:5,font-weight:bold
     
-    %% 3. Orange Accents (The Active Network Path)
+    %% 3. Orange Accents (Routing Nodes)
     classDef transit fill:#FFFFFF,stroke:#EA580C,stroke-width:2px,color:#1F2937,rx:5,ry:5
 
-    %% 4. The Docker List Box (Clean White with Blue Border)
-    classDef listBox fill:#FFFFFF,stroke:#2563EB,stroke-width:1px,color:#1E293B,rx:5,ry:5,align:left
+    %% 4. The Docker List Box
+    classDef listBox fill:#F8FAFC,stroke:#2563EB,stroke-width:1px,color:#1E293B,rx:5,ry:5,align:left
 
     %% --- CONTAINER STYLING ---
-    %% These look like "Grouped Zones" on the grey background
-    classDef containerZone fill:#E2E8F0,stroke:#94A3B8,stroke-width:1px,stroke-dasharray: 6 4,color:#475569
+    %% The "Master" container (The Grey Background Card)
+    classDef masterZone fill:#F5F7FA,stroke:#E2E8F0,stroke-width:1px,rx:10,ry:10,color:#64748B
+    
+    %% The Inner Zones (White cards on top of Grey)
+    classDef innerZone fill:#FFFFFF,stroke:#94A3B8,stroke-width:1px,stroke-dasharray: 6 4,color:#475569
 
     %% --- DIAGRAM CONTENT ---
 
-    %% 1. TOP LAYER
-    User["💻 Client / User"]:::client
-    DDNS["🔄 DDNS Updater"]:::base
-
-    %% 2. MIDDLE LAYER: Routing
-    subgraph Routing ["☁️ Ingress & Routing Layer"]
+    %% !!! MASTER CONTAINER STARTS HERE !!!
+    subgraph HomeLab ["🏠 Self-Hosted Architecture"]
         direction TB
-        DNS["🌐 Cloudflare DNS"]:::transit
-        Router["🏠 Home Router"]:::transit
-        Traefik["🚦 Traefik Proxy"]:::transit
-    end
 
-    %% 3. BOTTOM LAYER: Server
-    subgraph Server ["Raspberry Pi 4 - Docker Host"]
-        direction TB
-        DockerList["🐳 Docker Service Stack
-        _____________________________
-        🖥️ Homepage   | Dashboard
-        🎬 Jellyfin   | Media Server
-        📁 Nextcloud  | Secure Storage
-        🛡️ Pi-hole    | AdBlocking
-        🔒 Tailscale  | VPN Mesh"]:::listBox
+        %% 1. TOP LAYER
+        User["💻 Client / User"]:::client
+        DDNS["🔄 DDNS Updater"]:::base
+
+        %% 2. MIDDLE LAYER: Routing
+        subgraph Routing ["☁️ Ingress & Routing Layer"]
+            direction TB
+            DNS["🌐 Cloudflare DNS"]:::transit
+            Router["🏠 Home Router"]:::transit
+            Traefik["🚦 Traefik Proxy"]:::transit
+        end
+
+        %% 3. BOTTOM LAYER: Server
+        subgraph Server ["Raspberry Pi 4 - Docker Host"]
+            direction TB
+            DockerList["🐳 Docker Service Stack
+            _____________________________
+            🖥️ Homepage   | Dashboard
+            🎬 Jellyfin   | Media Server
+            📁 Nextcloud  | Secure Storage
+            🛡️ Pi-hole    | AdBlocking
+            🔒 Tailscale  | VPN Mesh"]:::listBox
+        end
     end
+    %% !!! MASTER CONTAINER ENDS HERE !!!
 
     %% --- CONNECTIONS ---
-    
     %% Active Path (Orange & Thick)
     User ==>|"HTTPS (443)"| DNS
     DNS ==>|"Resolve IP"| Router
@@ -73,7 +80,8 @@ flowchart TB
     DDNS -.-o|"Update API"| DNS
 
     %% --- APPLY STYLES ---
-    class Routing,Server containerZone
+    class HomeLab masterZone
+    class Routing,Server innerZone
 
     %% Link Styling
     linkStyle 0,1,2,3 stroke:#EA580C,stroke-width:3px,fill:none
