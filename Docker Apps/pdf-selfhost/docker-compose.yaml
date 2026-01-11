@@ -1,0 +1,26 @@
+services:
+  pdf-compressor:
+    image: charankumarbs/selfhost-pdf-compressor:latest
+    container_name: pdf-compressor
+    labels:
+      - "traefik.enable=true"
+
+      # HTTPS router (port 443) - Cloudflare TLS
+      - "traefik.http.routers.pdf-compressor-https.rule=Host(`pdf.jedarabale.space`)"
+      - "traefik.http.routers.pdf-compressor-https.entrypoints=websecure"
+      - "traefik.http.routers.pdf-compressor-https.service=pdf-compressor"
+      - "traefik.http.routers.pdf-compressor-https.tls.certresolver=cloudflare"
+
+      # Service definition (internal app port)
+      - "traefik.http.services.pdf-compressor.loadbalancer.server.port=8000"
+
+      # Optional: keep Watchtower behavior you had
+      - "com.centurylinklabs.watchtower.enable=true"
+
+    networks:
+      - frontend
+    restart: unless-stopped
+
+networks:
+  frontend:
+    external: true

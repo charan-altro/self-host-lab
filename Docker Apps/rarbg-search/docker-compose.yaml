@@ -1,0 +1,21 @@
+services:
+  rarbg-search:
+    build: .
+    container_name: rarbg-search
+    volumes:
+      - .:/app
+      # This ensures the container sees the DB file on your host
+      - ./rarbg_db.sqlite:/app/rarbg_db.sqlite:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.rarbg.rule=Host(`rarbg.jedarabale.space`)"
+      - "traefik.http.routers.rarbg.entrypoints=websecure"
+      - "traefik.http.routers.rarbg.tls.certresolver=cloudflare"
+      - "traefik.http.services.rarbg.loadbalancer.server.port=8000"
+    networks:
+      - frontend
+    restart: unless-stopped
+
+networks:
+  frontend:
+    external: true

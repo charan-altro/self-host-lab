@@ -1,0 +1,6 @@
+http:
+  middlewares:
+    homepage-auth:
+      basicAuth:
+        users:
+          - #Hashed passwords are in the form: user:hashedpassword should move to .env
