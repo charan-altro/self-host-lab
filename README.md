@@ -10,40 +10,43 @@ We use **Traefik** as the central entry point (Reverse Proxy) which automaticall
 ```mermaid
 flowchart LR
     %% --- Base Styles for a Clean, White Theme ---
+    %% General Node Style: White fill, colored borders, dark text
+    classDef baseNode fill:white,stroke-width:2px,color:#1F2937,rx:8,ry:8,font-family:sans-serif
+
     %% Specific Role Styles (Colors applied to border stroke only)
-    classDef user fill:#EFF6FF,stroke:#2563EB,stroke-width:2px,color:#1F2937,rx:8,ry:8,font-family:sans-serif
-    classDef internetNode fill:white,stroke:#9CA3AF,stroke-dasharray: 5 5,stroke-width:2px,color:#1F2937,rx:8,ry:8,font-family:sans-serif
-    classDef routerGateway fill:white,stroke:#F97316,stroke-width:3px,color:#1F2937,rx:8,ry:8,font-family:sans-serif
-    classDef dockerApp fill:white,stroke:#3B82F6,stroke-width:2px,color:#1F2937,rx:8,ry:8,font-family:sans-serif
-    classDef scriptNode fill:white,stroke:#6366F1,stroke-dasharray: 5 5,stroke-width:2px,color:#1F2937,rx:8,ry:8,font-family:sans-serif
+    classDef user stroke:#2563EB,fill:#EFF6FF %% Blue border, very light blue fill
+    classDef internetNode stroke:#9CA3AF,stroke-dasharray: 5 5 %% Gray dashed border
+    classDef routerGateway stroke:#F97316,stroke-width:3px %% Strong Orange border for main gateway components
+    classDef dockerApp stroke:#3B82F6 %% Standard Blue border for apps
+    classDef scriptNode stroke:#6366F1,stroke-dasharray: 5 5 %% Indigo dashed border for scripts
 
     %% Subgraph Styles to match reference image containers
     classDef subGraphContainer fill:#F9FAFB,stroke:#D1D5DB,stroke-width:2px,stroke-dasharray: 8 6,color:#374151,rx:10,ry:10
     classDef dockerSubGraph fill:#EFF6FF,stroke:#3B82F6,stroke-width:2px,color:#1F2937,rx:10,ry:10
 
     %% --- Nodes & Structure ---
-    User[💻 User]:::user
+    User[💻 User]:::user:::baseNode
 
     subgraph Internet ["☁️ Internet"]
         direction TB
-        CF_DNS["Cloudflare DNS"]:::internetNode
-        LE["Let's Encrypt"]:::internetNode
+        CF_DNS["Cloudflare DNS"]:::internetNode:::baseNode
+        LE["Let's Encrypt"]:::internetNode:::baseNode
     end
 
     subgraph Home ["🏠 Home Network"]
-        Router[Router]:::routerGateway
+        Router[Router]:::routerGateway:::baseNode
         
         subgraph Server ["Raspberry Pi 4 Server"]
-            Traefik["Traefik Reverse Proxy"]:::routerGateway
-            DDNS["🔄 DDNS Updater script"]:::scriptNode
+            Traefik["Traefik Reverse Proxy"]:::routerGateway:::baseNode
+            DDNS["🔄 DDNS Updater script"]:::scriptNode:::baseNode
             
             subgraph Docker ["🐳 Docker Containers"]
                 direction TB
-                Homepage["Homepage Dashboard"]:::dockerApp
-                Jellyfin["🎬 Jellyfin Media"]:::dockerApp
-                Nextcloud["📁 Nextcloud Storage"]:::dockerApp
-                PiHole["🛡️ Pi-hole DNS"]:::dockerApp
-                Tailscale["🔒 Tailscale VPN"]:::dockerApp
+                Homepage["Homepage Dashboard"]:::dockerApp:::baseNode
+                Jellyfin["🎬 Jellyfin Media"]:::dockerApp:::baseNode
+                Nextcloud["📁 Nextcloud Storage"]:::dockerApp:::baseNode
+                PiHole["🛡️ Pi-hole DNS"]:::dockerApp:::baseNode
+                Tailscale["🔒 Tailscale VPN"]:::dockerApp:::baseNode
             end
         end
     end
