@@ -34,7 +34,7 @@ graph TD
     User -->|1. https://app.example.com| CF_DNS
     CF_DNS -->|2. Resolve to Home IP| Router
     Router -->|3. Forward Traffic| Traefik
-    Traefik -->|4. Route (Internal Network)| Services
+    Traefik -->|"4. Route (Internal Network)"| Services
 
     %% Automation Flows
     DDNS -.->|Monitor & Update IP| CF_DNS
