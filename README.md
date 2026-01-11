@@ -9,74 +9,75 @@ We use **Traefik** as the central entry point (Reverse Proxy) which automaticall
 
 ```mermaid
 flowchart LR
-    %% --- Base Styles for a Clean, White Theme ---
-    %% General Node Style: White fill, colored borders, dark text
-    classDef baseNode fill:white,stroke-width:2px,color:#1F2937,rx:8,ry:8,font-family:sans-serif
+    %% --- GLOBAL STYLES (Cloudflare-like Aesthetic) ---
+    classDef base fill:#fff,stroke:#333,stroke-width:1px,color:#333,font-family:sans-serif,rx:4,ry:4
+    
+    %% Specific Styles
+    classDef user fill:#EBF8FF,stroke:#0051C3,stroke-width:2px,color:#0051C3
+    classDef component fill:#fff,stroke:#F48120,stroke-width:2px,color:#333 %% Orange borders for active infrastructure
+    classDef app fill:#F0F4F8,stroke:#00A9E0,stroke-width:1px,color:#333 %% Light blue apps
+    classDef helper fill:#fff,stroke:#999,stroke-width:1px,stroke-dasharray: 4 4,color:#666 %% Dashed for scripts
+    classDef cloud fill:none,stroke:#00A9E0,stroke-width:2px,stroke-dasharray: 8 6,color:#00A9E0
 
-    %% Specific Role Styles (Colors applied to border stroke only)
-    classDef user stroke:#2563EB,fill:#EFF6FF %% Blue border, very light blue fill
-    classDef internetNode stroke:#9CA3AF,stroke-dasharray: 5 5 %% Gray dashed border
-    classDef routerGateway stroke:#F97316,stroke-width:3px %% Strong Orange border for main gateway components
-    classDef dockerApp stroke:#3B82F6 %% Standard Blue border for apps
-    classDef scriptNode stroke:#6366F1,stroke-dasharray: 5 5 %% Indigo dashed border for scripts
+    %% --- NODES ---
+    User(("💻 User")):::user
 
-    %% Subgraph Styles to match reference image containers
-    classDef subGraphContainer fill:#F9FAFB,stroke:#D1D5DB,stroke-width:2px,stroke-dasharray: 8 6,color:#374151,rx:10,ry:10
-    classDef dockerSubGraph fill:#EFF6FF,stroke:#3B82F6,stroke-width:2px,color:#1F2937,rx:10,ry:10
-
-    %% --- Nodes & Structure ---
-    User[💻 User]:::user:::baseNode
-
-    subgraph Internet ["☁️ Internet"]
+    subgraph Cloud ["☁️ Internet"]
         direction TB
-        CF_DNS["Cloudflare DNS"]:::internetNode:::baseNode
-        LE["Let's Encrypt"]:::internetNode:::baseNode
+        CF_DNS["Cloudflare DNS"]:::component
+        LE["Let's Encrypt"]:::helper
     end
 
     subgraph Home ["🏠 Home Network"]
-        Router[Router]:::routerGateway:::baseNode
+        Router["Router"]:::component
         
-        subgraph Server ["Raspberry Pi 4 Server"]
-            Traefik["Traefik Reverse Proxy"]:::routerGateway:::baseNode
-            DDNS["🔄 DDNS Updater script"]:::scriptNode:::baseNode
+        subgraph Server ["Raspberry Pi 4"]
+            direction TB
+            Traefik["Traefik Proxy"]:::component
+            DDNS["DDNS Script"]:::helper
             
-            subgraph Docker ["🐳 Docker Containers"]
-                direction TB
-                Homepage["Homepage Dashboard"]:::dockerApp:::baseNode
-                Jellyfin["🎬 Jellyfin Media"]:::dockerApp:::baseNode
-                Nextcloud["📁 Nextcloud Storage"]:::dockerApp:::baseNode
-                PiHole["🛡️ Pi-hole DNS"]:::dockerApp:::baseNode
-                Tailscale["🔒 Tailscale VPN"]:::dockerApp:::baseNode
+            subgraph Apps ["Docker Apps"]
+                %% Linking these invisible lines helps stack them neatly
+                Homepage["Homepage"]:::app
+                Jellyfin["Jellyfin"]:::app
+                Nextcloud["Nextcloud"]:::app
+                PiHole["Pi-hole"]:::app
+                Tailscale["Tailscale"]:::app
             end
         end
     end
 
-    %% --- Traffic Flow ---
-    %% Main Data Path (Thick Orange Lines)
-    User ==>|HTTPS Request| CF_DNS
-    CF_DNS ==>|Resolve to Home IP| Router
-    Router ==>|Port 443 Forward| Traefik
+    %% --- MAIN TRAFFIC FLOW (Thick Orange Lines) ---
+    User ==> |"HTTPS"| CF_DNS
+    CF_DNS ==> |"Home IP"| Router
+    Router ==> |"Port 443"| Traefik
+    Traefik ==> |"Route"| Homepage
     
-    %% Internal Routing (Thinner standard lines)
-    Traefik --> Homepage
+    %% --- INTERNAL APP LINKS (Subtle) ---
+    %% We link Traefik to just the top app to keep the line straight, 
+    %% then use invisible links or light links for the rest to avoid "Spaghetti"
     Traefik --> Jellyfin
     Traefik --> Nextcloud
     Traefik --> PiHole
     Traefik --> Tailscale
 
-    %% Automation/Management Flows (Dotted lines)
-    DDNS -.->|Periodic IP Update| CF_DNS
-    Traefik -.->|ACME Challenge / Renew Certs| LE
+    %% --- MANAGEMENT LINKS (Dashed/Subtle) ---
+    DDNS -.-> |"Update IP"| CF_DNS
+    Traefik -.-> |"Get Certs"| LE
 
-    %% --- Applying Subgraph Styles ---
-    class Internet subGraphContainer
-    class Home subGraphContainer
-    class Server subGraphContainer
-    class Docker dockerSubGraph
+    %% --- STYLING ADJUSTMENTS ---
+    %% Style the main layout boxes
+    class Cloud cloud
+    class Home,Server cloud
 
-    %% --- Link Styling to mimic reference image ---
-    %% Style the first 3 main links to be thick and orange
-    linkStyle 0,1,2 stroke:#F97316,stroke-width:4px,fill:none
+    %% Force the main path to be Orange and Thick
+    linkStyle 0,1,2,3 stroke:#F48120,stroke-width:3px,fill:none
+    
+    %% Make the app connections thinner and blue
+    linkStyle 4,5,6,7 stroke:#00A9E0,stroke-width:1px,fill:none
+    
+    %% Make management links gray
+    linkStyle 8,9 stroke:#999,stroke-width:1px,stroke-dasharray: 4 4,fill:none
 ```
 
 ## 🌐 Connectivity Logic
