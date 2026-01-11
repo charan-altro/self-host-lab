@@ -1,10 +1,8 @@
-# 🏠 Self-Hosted Home Lab
+# 🏠 Self-Hosted Home Lab - Technical Architecture
 
-This repository documents a self-hosted home lab running on a **Raspberry Pi 4 (8GB)**. It features a secure, automated HTTPS setup using Traefik, Let's Encrypt, and Cloudflare DDNS to handle dynamic IPs from the ISP (Airtel).
+A production-grade self-hosted home lab on **Raspberry Pi 4 (8GB)** with containerized services, automated TLS/SSL, reverse proxy routing, and secure DNS management using industry-standard tools: **Traefik**, **Let's Encrypt**, **Cloudflare**, and **Docker**.
 
-## 🏗️ Architecture & Security Flow
-
-We use **Traefik** as the central entry point (Reverse Proxy) which automatically manages SSL certificates. Since our ISP provides a dynamic IP, a **DDNS script** ensures our domain always points to the correct home address.
+## 🏗️ System Architecture Overview
 
 ```mermaid
 %%{init: {
@@ -12,52 +10,103 @@ We use **Traefik** as the central entry point (Reverse Proxy) which automaticall
   'themeVariables': {
     'background': '#F5F7FA',
     'primaryTextColor': '#1F2937',
-    'lineColor': '#64748B',
-    'fontSize': '14px'
+    'fontSize': '13px'
   },
-  'flowchart': { 'rankSpacing': 20, 'nodeSpacing': 20 }
+  'flowchart': { 'rankSpacing': 25, 'nodeSpacing': 20 }
 }}%%
-flowchart LR
-    %% --- STYLES ---
-    classDef base fill:#FFFFFF,stroke:#CBD5E1,stroke-width:1px,color:#1F2937,rx:4,ry:4,shadow:true
-    classDef script fill:#F8FAFC,stroke:#2563EB,stroke-width:2px,color:#1E3A8A,rx:4,ry:4,font-family:monospace,align:left
-    classDef cloud fill:#FFFFFF,stroke:#EA580C,stroke-width:2px,color:#1F2937,rx:4,ry:4,shadow:true
+flowchart TB
+    classDef external fill:#FEF3C7,stroke:#D97706,stroke-width:2px,color:#1F2937,rx:6,ry:6,font-weight:bold
+    classDef cloudflare fill:#DBEAFE,stroke:#0284C7,stroke-width:2px,color:#1E3A8A,rx:6,ry:6,font-weight:bold
+    classDef router fill:#E0E7FF,stroke:#4F46E5,stroke-width:2px,color:#1E3A8A,rx:6,ry:6,font-weight:bold
+    classDef traefik fill:#F0FDF4,stroke:#16A34A,stroke-width:2px,color:#15803D,rx:6,ry:6,font-weight:bold
+    classDef docker fill:#F3E8FF,stroke:#A855F7,stroke-width:2px,color:#6B21A8,rx:6,ry:6,font-weight:bold
+    classDef storage fill:#FECACA,stroke:#DC2626,stroke-width:1px,color:#7F1D1D,rx:6,ry:6,font-family:monospace
+    classDef letsencrypt fill:#CCFBF1,stroke:#0D9488,stroke-width:2px,color:#134E4A,rx:6,ry:6,font-weight:bold
 
-    %% --- STRUCTURE ---
-    subgraph Maintenance ["🔄 DDNS Auto-Sync Loop - Keep DNS Always Updated"]
-        direction LR
+    %% External Layer
+    Client["👥 <b>External Clients</b>
+    (HTTPS Requests)"]:::external
+
+    %% DNS Layer
+    subgraph DNS["🌐 DNS Resolution Layer"]
+        CF_DNS["☁️ Cloudflare DNS
+        A Record: example.com → Public IP
+        CNAME Records: *.example.com"]:::cloudflare
+        DDNS["🔄 DDNS Updater
+        (Cron: every 5 mins)
+        Detects IP changes
+        Updates via CF API"]:::router
+    end
+
+    %% Network Layer
+    subgraph Network["🏠 Home Network Layer"]
+        ISP["🌍 ISP (Airtel)
+        Dynamic Public IP
+        Port Forwarding: 80/443"]:::external
+        Router["🚀 Home Router
+        NAT + Port Forward
+        :80 → Traefik
+        :443 → Traefik"]:::router
+    end
+
+    %% Traefik Layer
+    subgraph Reverse["🚦 Traefik Reverse Proxy Layer"]
+        Traefik["<b>Traefik</b>
+        Listens: 0.0.0.0:80, :443
+        Rules Engine
+        Load Balancer"]:::traefik
+        LE["🔐 Let's Encrypt Client
+        ACME Protocol (v2)
+        Auto Renewal (30 days before expiry)
+        Stores certs in volume"]:::letsencrypt
+    end
+
+    %% Docker Layer
+    subgraph Containers["🐳 Docker Container Stack"]
+        direction TB
+        subgraph Apps["📦 Application Containers"]
+            Jellyfin["🎬 Jellyfin
+            Service: jellyfin:8096
+            Label: jellyfin.example.com"]:::docker
+            Nextcloud["☁️ Nextcloud
+            Service: nextcloud:80
+            Label: cloud.example.com"]:::docker
+            Heimdall["🖥️ Heimdall Dashboard
+            Service: heimdall:80
+            Label: home.example.com"]:::docker
+            Pihole["🛡️ Pi-hole
+            Service: pihole:80
+            Label: dns.example.com"]:::docker
+        end
         
-        %% RASPBERRY PI SIDE
-        subgraph Pi ["Raspberry Pi 4 (Local)"]
-            direction TB
-            DDNS_Script["🐍 <b>DDNS Script</b>
-            ──────────────
-            ⏰ Runs every 5 mins
-            🔍 Detects Public IP
-            📊 Compares with DNS"]:::script
-        end
-
-        %% CLOUDFLARE SIDE
-        subgraph Cloud ["Cloudflare Cloud (Remote)"]
-            direction TB
-            API["☁️ <b>Cloudflare API</b>
-            ──────────────
-            🔐 Secure Update
-            📍 Updates 'A' Record
-            ✅ Confirms Change"]:::cloud
+        subgraph Storage["💾 Persistent Storage"]
+            Vol1["📁 /media - Media Library"]:::storage
+            Vol2["📁 /nextcloud - Cloud Storage"]:::storage
+            Vol3["📁 /traefik - Certs & Config"]:::storage
         end
     end
 
-    %% --- LOGIC FLOW ---
-    DDNS_Script ==>|"If IP Changed"| API
-    API -.->|"Success Response"| DDNS_Script
+    %% Connections
+    Client -->|"HTTPS :443"| CF_DNS
+    CF_DNS -->|"Resolves to Public IP"| ISP
+    DDNS -->|"Updates A records"| CF_DNS
+    ISP -->|"Port Forward :443"| Router
+    Router -->|"Routes to :443"| Traefik
+    Traefik -->|"TLS Handshake + Routing"| LE
+    LE -->|"ACME Challenge"| CF_DNS
+    Traefik -->|"Service Discovery"| Apps
+    Apps -->|"Persist Data"| Storage
 
-    %% --- STYLES ---
-    class Maintenance masterZone
-    classDef masterZone fill:#F5F7FA,stroke:#E2E8F0,stroke-width:2px,rx:10,ry:10,color:#334155
-    linkStyle 0 stroke:#2563EB,stroke-width:3px
-    linkStyle 1 stroke:#94A3B8,stroke-width:2px,stroke-dasharray: 4 4
+    %% Link Styles
+    linkStyle 0,1 stroke:#D97706,stroke-width:2px
+    linkStyle 2 stroke:#0284C7,stroke-width:2px
+    linkStyle 3,4,5 stroke:#4F46E5,stroke-width:2px
+    linkStyle 6 stroke:#16A34A,stroke-width:2px
+    linkStyle 7,8 stroke:#A855F7,stroke-width:2px
+    linkStyle 9 stroke:#DC2626,stroke-width:1px
 ```
+
+## 🔐 Traefik + Let's Encrypt Certificate Lifecycle
 
 ```mermaid
 %%{init: {
@@ -65,101 +114,251 @@ flowchart LR
   'themeVariables': {
     'background': '#F5F7FA',
     'primaryTextColor': '#1F2937',
-    'lineColor': '#64748B',
-    'fontSize': '14px'
+    'fontSize': '12px'
   },
-  'flowchart': { 'rankSpacing': 15, 'nodeSpacing': 15 }
+  'flowchart': { 'rankSpacing': 20, 'nodeSpacing': 15 }
 }}%%
 flowchart LR
-    %% --- STYLES ---
-    classDef client fill:#FFFFFF,stroke:#2563EB,stroke-width:2px,color:#1E3A8A,rx:4,ry:4,font-weight:bold,shadow:true
-    classDef netStack fill:#FFFFFF,stroke:#EA580C,stroke-width:2px,color:#1F2937,rx:4,ry:4,shadow:true,align:center
-    classDef appStack fill:#F8FAFC,stroke:#2563EB,stroke-width:1px,color:#1E293B,rx:4,ry:4,align:left,font-family:monospace
-    classDef lock fill:#DCFCE7,stroke:#15803D,stroke-width:2px,color:#15803D,rx:4,ry:4,font-weight:bold
-    
-    %% --- STRUCTURE ---
-    subgraph Traffic ["🔒 End-to-End Encrypted HTTPS Traffic Path"]
-        direction LR
+    classDef boot fill:#FEE2E2,stroke:#DC2626,stroke-width:2px,color:#7F1D1D,rx:5,ry:5
+    classDef acme fill:#CCFBF1,stroke:#0D9488,stroke-width:2px,color:#134E4A,rx:5,ry:5,font-weight:bold
+    classDef challenge fill:#F3E8FF,stroke:#A855F7,stroke-width:2px,color:#6B21A8,rx:5,ry:5
+    classDef stored fill:#DBEAFE,stroke:#0284C7,stroke-width:2px,color:#1E3A8A,rx:5,ry:5
+    classDef client fill:#FEF3C7,stroke:#D97706,stroke-width:2px,color:#1F2937,rx:5,ry:5
 
-        %% 1. USER
-        User["💻 <b>User / Client</b>
-        <i>(External Request)</i>"]:::client
+    Start["🚀 Traefik Starts
+    Reads docker-compose.yml
+    Discovers services via labels"]:::boot
 
-        %% 2. NETWORK STACK
-        subgraph NetLayer ["Network Path (Secure)"]
-            Stack["🌐 <b>Cloudflare DNS</b>
-            ⬇️ <i>(Resolves to IP)</i>
-            🏠 <b>Home Router</b>
-            ⬇️ <i>(Port Forward :443)</i>
-            🚦 <b>Traefik</b>"]:::netStack
-        end
+    ACME["📋 ACME Account Check
+    Uses existing account OR
+    Creates new one
+    (acme.json saved)"]:::acme
 
-        %% 3. APPS
-        subgraph Server ["🐳 Docker Container Stack"]
-            Apps["
-            🖥️ Dashboard (Heimdall)
-            🎬 Media (Jellyfin)
-            📁 Storage (Nextcloud)
-            🛡️ DNS/Security (Pi-hole)"]:::appStack
-        end
+    Discover["🔍 Service Discovery
+    Finds labels:
+    - traefik.http.routers
+    - traefik.http.services"]:::boot
 
-        %% 4. SSL
-        SSL["🔐 <b>SSL/TLS</b>
-        <i>(Let's Encrypt)</i>"]:::lock
-    end
+    Domain["🌍 Collect Domains
+    Extract from router rules
+    e.g., Host('jellyfin.example.com')"]:::client
 
-    %% --- CONNECTIONS ---
-    User ==>|"HTTPS Request :443"| Stack
-    SSL -.->|"Certificates"| Stack
-    Stack ==>|"Secure Route"| Apps
+    Challenge["⚡ ACME Challenge (DNS-01)
+    Traefik requests CF API token
+    Creates TXT record in DNS
+    LE validates: _acme-challenge.example.com"]:::challenge
 
-    %% --- STYLES ---
-    linkStyle 0 stroke:#EA580C,stroke-width:3px
-    linkStyle 1 stroke:#15803D,stroke-width:2px,stroke-dasharray: 4 4
-    linkStyle 2 stroke:#2563EB,stroke-width:3px
-    
-    classDef masterZone fill:#F5F7FA,stroke:#E2E8F0,stroke-width:2px,rx:10,ry:10,color:#334155
-    classDef innerZone fill:#FFFFFF,stroke:#94A3B8,stroke-width:1px,stroke-dasharray: 6 4
-    class Traffic masterZone
-    class NetLayer,Server innerZone
+    Verify["✅ Let's Encrypt Verifies
+    Queries TXT record
+    Confirms domain ownership
+    Issues signed certificate"]:::acme
+
+    Store["💾 Store Certificate
+    Saves to acme.json
+    Path: /traefik/acme.json
+    (Docker volume)"]:::stored
+
+    Load["🔑 Load into Traefik
+    TLS certificate ready
+    Listens on :443
+    Serves HTTPS to clients"]:::boot
+
+    Renew["🔄 Auto-Renewal Check
+    Runs 30 days before expiry
+    Repeats ACME challenge
+    Transparent to users"]:::acme
+
+    Start --> ACME
+    ACME --> Discover
+    Discover --> Domain
+    Domain --> Challenge
+    Challenge --> Verify
+    Verify --> Store
+    Store --> Load
+    Load --> Renew
+    Renew -.->|"Loop (every 24h)"| Challenge
+
+    %% Link Styles
+    linkStyle 8 stroke:#0D9488,stroke-width:2px,stroke-dasharray: 5 5
 ```
 
-## 🌐 Connectivity & Security Logic
+## 🔄 DDNS Update Flow with Cloudflare API
 
-### 1. Dynamic DNS (DDNS) - Keep Your Domain Updated
-**Problem:** Airtel Broadband changes the Public IP address frequently (no static IP).
+```mermaid
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'background': '#F5F7FA',
+    'primaryTextColor': '#1F2937',
+    'fontSize': '12px'
+  },
+  'flowchart': { 'rankSpacing': 18, 'nodeSpacing': 15 }
+}}%%
+flowchart LR
+    classDef cron fill:#FEE2E2,stroke:#DC2626,stroke-width:2px,color:#7F1D1D,rx:5,ry:5,font-weight:bold
+    classDef detect fill:#FEF3C7,stroke:#D97706,stroke-width:2px,color:#1F2937,rx:5,ry:5
+    classDef compare fill:#F3E8FF,stroke:#A855F7,stroke-width:2px,color:#6B21A8,rx:5,ry:5
+    classDef api fill:#DBEAFE,stroke:#0284C7,stroke-width:2px,color:#1E3A8A,rx:5,ry:5,font-weight:bold
+    classDef update fill:#CCFBF1,stroke:#0D9488,stroke-width:2px,color:#134E4A,rx:5,ry:5
+    classDef success fill:#C7D2FE,stroke:#4F46E5,stroke-width:2px,color:#1E3A8A,rx:5,ry:5
 
-**Solution:** [Cloudflare DDNS Updater](https://github.com/K0p1-Git/cloudflare-ddns-updater)
-- **How it works:** 
-  - Runs as a scheduled Cron job (every 5 minutes)
-  - Detects the current Public IP
-  - Compares it with the DNS `A` record in Cloudflare
-  - If changed, automatically updates via Cloudflare API
-- **Result:** `*.example.com` always resolves to your home network, even when ISP changes your IP
+    Trigger["⏰ Cron Job Triggers
+    Schedule: */5 * * * *
+    (every 5 minutes)"]:::cron
 
-### 2. Reverse Proxy & HTTPS (Traefik) - Secure Gateway
-**Role:** Manages all incoming traffic and SSL certificates.
-- **Listens on:** Ports 80 (HTTP) and 443 (HTTPS)
-- **Let's Encrypt Integration:** 
-  - Automatically requests SSL certificates for all subdomains
-  - Handles certificate renewal before expiration
-- **HTTP → HTTPS Redirect:** All unencrypted traffic is redirected to secure HTTPS
+    GetIP["🔍 Detect Public IP
+    curl ifconfig.me
+    OR
+    curl api.ipify.org"]:::detect
 
-### 3. Cloudflare DNS & Security (Optional Tunnel Alternative)
-You can optionally use **Cloudflare Tunnel** instead of manual port forwarding:
+    GetDNS["📡 Query Cloudflare DNS
+    CF API: GET zone
+    Current A record IP
+    Headers: X-Auth-Email, X-Auth-Key"]:::api
 
-| Method | Pros | Cons |
-|--------|------|------|
-| **DDNS + Port Forward** (Current) | Full control, Lower latency, Self-hosted | Manual port setup, ISP may block ports, Dynamic IP updates needed |
-| **Cloudflare Tunnel** | No port forwarding needed, NAT bypass, Zero Trust Security | Added latency, Cloudflare dependency, Slower for local users |
+    Compare["⚖️ Compare IPs
+    Local Public IP
+    vs
+    Cloudflare A Record"]:::compare
 
-**Current Setup:** Uses DDNS + Port Forward (443) → More performant for home network access
+    NoChange{"IPs Match?"}:::compare
 
-## 🛠️ Hardware & Software Stack
+    Change["🔀 IPs Different
+    Prepare update payload"]:::detect
 
-| Component | Role | Key Services |
-|-----------|------|--------------|
-| **Raspberry Pi 4 (8GB)** | Central Server | Docker Engine, Traefik Reverse Proxy, Let's Encrypt, DDNS Script, Cron Scheduler |
-| **Cloudflare DNS** | DNS Management | Domain Resolution, DDNS Updates via API, DDoS Protection |
-| **Docker Containers** | Applications | Jellyfin (Media), Nextcloud (Cloud Storage), Pi-hole (DNS/Security), Heimdall (Dashboard) |
-| **Traefik** | Entry Point | SSL Termination, Load Balancing, Automatic Certificate Management |
+    APICall["🌐 Call Cloudflare API
+    PUT /zones/{zone_id}/dns_records/{id}
+    Content: new IP address
+    Auth: API Token"]:::api
+
+    Response{"200 OK Response?"}:::api
+
+    Success["✅ Update Successful
+    A record now points to
+    current Public IP
+    Log: SUCCESS"]:::success
+
+    Fail["❌ Update Failed
+    Log error
+    Retry next cycle"]:::update
+
+    NoLog["⏭️ Skip Update
+    IP unchanged
+    Log: NO_CHANGE"]:::update
+
+    Trigger --> GetIP
+    GetIP --> GetDNS
+    GetDNS --> Compare
+    Compare --> NoChange
+    NoChange -->|"Yes"| NoLog
+    NoChange -->|"No"| Change
+    Change --> APICall
+    APICall --> Response
+    Response -->|"Yes"| Success
+    Response -->|"No"| Fail
+
+    %% Link Styles
+    linkStyle 0,1,2 stroke:#DC2626,stroke-width:2px
+    linkStyle 3,4 stroke:#D97706,stroke-width:2px
+    linkStyle 5,6,7 stroke:#0284C7,stroke-width:2px
+    linkStyle 8,9,10 stroke:#4F46E5,stroke-width:2px
+    linkStyle 11 stroke:#0D9488,stroke-width:2px
+    linkStyle 12 stroke:#DC2626,stroke-width:2px
+```
+
+## ☁️ Cloudflare Tunnel vs DDNS + Port Forward
+
+```mermaid
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'background': '#F5F7FA',
+    'primaryTextColor': '#1F2937',
+    'fontSize': '12px'
+  },
+  'flowchart': { 'rankSpacing': 20, 'nodeSpacing': 15 }
+}}%%
+flowchart TB
+    classDef current fill:#C7D2FE,stroke:#4F46E5,stroke-width:2px,color:#1E3A8A,rx:6,ry:6,font-weight:bold
+    classDef alternative fill:#FEE2E2,stroke:#DC2626,stroke-width:2px,color:#7F1D1D,rx:6,ry:6,font-weight:bold
+    classDef step fill:#DBEAFE,stroke:#0284C7,stroke-width:2px,color:#1E3A8A,rx:5,ry:5
+    classDef benefit fill:#CCFBF1,stroke:#0D9488,stroke-width:2px,color:#134E4A,rx:5,ry:5
+    classDef issue fill:#FEF3C7,stroke:#D97706,stroke-width:2px,color:#1F2937,rx:5,ry:5
+
+    subgraph Current["✅ CURRENT: DDNS + Port Forward (Used)"]
+        CF1["☁️ Cloudflare DNS
+        Stores A record"]:::step
+        DDNS1["🔄 DDNS Script
+        Updates A record on IP change
+        Public IP → A Record"]:::step
+        PF["🚀 Port Forward
+        Router :80,:443 → Traefik
+        Direct connection"]:::step
+        TRK["🚦 Traefik
+        Handles HTTPS
+        Routes to containers"]:::step
+        
+        B1["✅ Low latency"]:::benefit
+        B2["✅ Full control"]:::benefit
+        B3["✅ Self-hosted"]:::benefit
+        
+        I1["⚠️ ISP may block ports"]:::issue
+        I2["⚠️ Manual setup"]:::issue
+        I3["⚠️ Requires DDNS"]:::issue
+    end
+
+    subgraph Alternative["❌ ALTERNATIVE: Cloudflare Tunnel (Not Used)"]
+        CT["🌐 Cloudflare Tunnel
+        Daemon: cloudflared"]:::step
+        CTO["📤 Outbound Connection
+        :localhost:80 → CF Edge
+        Secure tunnel created"]:::step
+        CFEDGE["☁️ Cloudflare Edge
+        Public endpoint
+        Routes to tunnel"]:::step
+        CFREQ["📥 Request routing
+        Client → CF Edge → Tunnel → Traefik"]:::step
+        
+        B4["✅ No port forwarding"]:::benefit
+        B5["✅ NAT bypass"]:::benefit
+        B6["✅ Zero Trust security"]:::benefit
+        
+        I4["⚠️ Higher latency"]:::issue
+        I5["⚠️ CF dependency"]:::issue
+        I6["⚠️ Slower for local access"]:::issue
+    end
+
+    CF1 --> DDNS1
+    DDNS1 --> PF
+    PF --> TRK
+    TRK --> B1
+    TRK --> B2
+    TRK --> B3
+    TRK --> I1
+    TRK --> I2
+    TRK --> I3
+
+    CT --> CTO
+    CTO --> CFEDGE
+    CFEDGE --> CFREQ
+    CFREQ --> B4
+    CFREQ --> B5
+    CFREQ --> B6
+    CFREQ --> I4
+    CFREQ --> I5
+    CFREQ --> I6
+```
+
+## 🐳 Docker Compose Service Architecture
+
+Your services are orchestrated via Docker with labels that Traefik reads automatically:
+
+```yaml
+# Key Services & Traefik Integration
+
+# 1. TRAEFIK - Reverse Proxy & Load Balancer
+traefik:
+  image: traefik:v2.x
+  labels:
+    # Dashboard (traefik.example.com)
+    traefik.http.routers.traefik.rule: "Host(`traefik.example.com`)"
