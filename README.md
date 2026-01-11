@@ -7,39 +7,43 @@ This repository documents a self-hosted home lab running on a **Raspberry Pi 4 (
 We use **Traefik** as the central entry point (Reverse Proxy) which automatically manages SSL certificates. Since our ISP provides a dynamic IP, a **DDNS script** ensures our domain always points to the correct home address.
 
 ```mermaid
-graph LR
+flowchart LR
     %% Define Styles
-    classDef user fill:#ffffff,stroke:#2962ff,stroke-width:2px,rx:10,ry:10,color:#2962ff
-    classDef cloud fill:#fff3e0,stroke:#ef6c00,stroke-width:2px,rx:5,ry:5,color:#e65100
-    classDef home fill:#e3f2fd,stroke:#1565c0,stroke-width:2px,rx:5,ry:5,color:#0d47a1
-    classDef proxy fill:#fff8e1,stroke:#ff8f00,stroke-width:2px,rx:5,ry:5,color:#ef6c00
-    classDef app fill:#ffffff,stroke:#1565c0,stroke-width:1px,rx:5,ry:5,color:#0d47a1
-    classDef auto fill:#f3e5f5,stroke:#ab47bc,stroke-width:1px,rx:5,ry:5,stroke-dasharray: 5 5,color:#7b1fa2
+    classDef user fill:#2563EB,stroke:#1D4ED8,stroke-width:2px,color:white,rx:10,ry:10
+    classDef cloud fill:#F3F4F6,stroke:#6B7280,stroke-width:2px,color:#1F2937,rx:5,ry:5
+    classDef router fill:#F97316,stroke:#C2410C,stroke-width:2px,color:white,rx:5,ry:5
+    classDef proxy fill:#F59E0B,stroke:#B45309,stroke-width:2px,color:white,rx:5,ry:5
+    
+    %% App specific colors
+    classDef dashboard fill:#3B82F6,stroke:#1D4ED8,stroke-width:2px,color:white,rx:5,ry:5
+    classDef media fill:#8B5CF6,stroke:#5B21B6,stroke-width:2px,color:white,rx:5,ry:5
+    classDef storage fill:#10B981,stroke:#047857,stroke-width:2px,color:white,rx:5,ry:5
+    classDef dns fill:#EF4444,stroke:#B91C1C,stroke-width:2px,color:white,rx:5,ry:5
+    classDef vpn fill:#EC4899,stroke:#BE185D,stroke-width:2px,color:white,rx:5,ry:5
+    classDef script fill:#6366F1,stroke:#4338CA,stroke-width:2px,color:white,rx:5,ry:5,stroke-dasharray: 5 5
 
     User[💻 User]:::user
     
-    subgraph Cloud [☁️ Cloudflare Network]
+    subgraph Internet [☁️ Internet]
         direction TB
         CF_DNS[Cloudflare DNS]:::cloud
-        LE[Let's Encrypt]:::auto
+        LE[Let's Encrypt]:::cloud
     end
     
     subgraph Home [🏠 Home Network]
-        direction LR
         Router[Router]:::home
         
         subgraph Server [Raspberry Pi 4]
-            direction LR
             Traefik[Traefik Proxy]:::proxy
-            DDNS[DDNS Updater]:::auto
+            DDNS[DDNS Updater]:::script
             
             subgraph Docker [Docker Apps]
                 direction TB
-                Homepage[Homepage]:::app
-                Jellyfin[Jellyfin]:::app
-                Nextcloud[Nextcloud]:::app
-                PiHole[Pi-hole]:::app
-                Tailscale[Tailscale]:::app
+                Homepage[Homepage]:::dashboard
+                Jellyfin[Jellyfin]:::media
+                Nextcloud[Nextcloud]:::storage
+                PiHole[Pi-hole]:::dns
+                Tailscale[Tailscale]:::vpn
             end
         end
     end
