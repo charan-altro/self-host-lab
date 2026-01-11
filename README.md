@@ -9,72 +9,71 @@ We use **Traefik** as the central entry point (Reverse Proxy) which automaticall
 
 ```mermaid
 flowchart LR
-    %% --- THEME SETTINGS ---
-    %% Force white backgrounds and dark text for a "Document" look
-    classDef base fill:#ffffff,stroke:#D1D5DB,stroke-width:1px,color:#374151,font-family:sans-serif,rx:4,ry:4
+    %% --- THEME: CLOUDFLARE STYLE ---
+    %% 1. Basic White Node
+    classDef base fill:#fff,stroke:#666,stroke-width:1px,color:#333,rx:5,ry:5
     
-    %% Specific Colors based on your reference image
-    classDef user fill:#EFF6FF,stroke:#2563EB,stroke-width:2px,color:#1E3A8A %% Blue Client
-    classDef orangeBox fill:#ffffff,stroke:#F97316,stroke-width:2px,color:#C2410C %% Orange/Important
-    classDef blueBox fill:#F8FAFC,stroke:#3B82F6,stroke-width:1px,color:#1E3A8A %% Blue/Apps
-    classDef dashedBox fill:#ffffff,stroke:#9CA3AF,stroke-width:2px,stroke-dasharray: 6 4,color:#6B7280 %% Dashed Containers
+    %% 2. The "Client" and "Destination" (Blue Theme)
+    classDef blueNode fill:#EBF8FF,stroke:#00A9E0,stroke-width:2px,color:#0051C3
     
-    %% --- GRAPH STRUCTURE ---
+    %% 3. The "Network Middle" (Orange Theme - Active Path)
+    classDef orangeNode fill:#fff,stroke:#F48120,stroke-width:3px,color:#333
     
-    %% 1. The Client
-    User(💻 User):::user
+    %% 4. Containers/Groups (Dashed Orange or Blue)
+    classDef container fill:#fff,stroke:#F48120,stroke-width:2px,stroke-dasharray: 5 5,color:#F48120,rx:10,ry:10
+    classDef homeContainer fill:#F9FAFB,stroke:#9CA3AF,stroke-width:2px,stroke-dasharray: 8 8,color:#6B7280,rx:10,ry:10
 
-    %% 2. The Internet Layer (Dashed Container)
-    subgraph Internet ["☁️ Internet / Cloudflare"]
+    %% --- STRUCTURE ---
+
+    %% A. The User (Start)
+    User("💻 User / Client"):::blueNode
+
+    %% B. The Network (Middle Section)
+    subgraph Network ["☁️ Internet & Routing"]
         direction LR
-        DNS["Cloudflare DNS"]:::base
-        LetsEncrypt["Let's Encrypt"]:::base
+        DNS["Cloudflare DNS"]:::orangeNode
+        Router["🏠 Home Router"]:::orangeNode
+        Traefik["🚦 Traefik Proxy"]:::orangeNode
     end
 
-    %% 3. The Home Network (Large Blue Container)
-    subgraph Home ["🏠 Home Network"]
-        direction LR
-        Router["Router"]:::orangeBox
+    %% C. The Destination (End)
+    subgraph Server ["Raspberry Pi 4"]
+        direction TB
+        %% This invisible node helps align the title or structure if needed
         
-        %% 4. The Server (Orange Container)
-        subgraph Pi ["Raspberry Pi 4 Server"]
-            direction LR
-            Traefik["Traefik Proxy"]:::orangeBox
-            DDNS["DDNS Script"]:::base
-            
-            %% 5. Apps (Compact Stack)
-            subgraph Apps ["🐳 Docker Apps"]
-                direction TB
-                Homepage["Homepage"]:::blueBox
-                Media["Jellyfin"]:::blueBox
-                Files["Nextcloud"]:::blueBox
-                Network["Pi-hole & VPN"]:::blueBox
-            end
+        subgraph Apps ["🐳 Docker Service Stack"]
+            direction TB
+            %% Stacking these looks like the 'Server Rack' in your reference image
+            Homepage["Homepage Dashboard"]:::blueNode
+            Jellyfin["🎬 Jellyfin Media"]:::blueNode
+            Nextcloud["📁 Nextcloud Storage"]:::blueNode
+            PiHole["🛡️ Pi-hole & VPN"]:::blueNode
         end
+        
+        %% Sidecar Scripts (Helper)
+        DDNS("🔄 DDNS Script"):::base
     end
 
-    %% --- CONNECTIONS (Straight & Clean) ---
-    %% Main "Golden Path" (Thick Orange)
-    User ==>|HTTPS| DNS
-    DNS ==>|Home IP| Router
+    %% --- CONNECTIONS ---
+    
+    %% 1. The "Golden Path" (Thick Orange Line) represents the Request Flow
+    User ==>|HTTPS Request| DNS
+    DNS ==>|Home Public IP| Router
     Router ==>|Port 443| Traefik
     Traefik ==>|Route| Apps
 
-    %% Secondary Helper Lines (Dashed Gray)
+    %% 2. Maintenance Links (Dotted/Grey)
     DDNS -.-o|Update IP| DNS
-    Traefik -.-o|Certificates| LetsEncrypt
 
-    %% --- STYLING THE CONTAINERS ---
-    class Internet dashedBox
-    class Home dashedBox
-    class Pi dashedBox
-    class Apps base
-
-    %% --- COLORING THE LINES ---
-    %% 0,1,2,3 are the main data path (Orange)
-    linkStyle 0,1,2,3 stroke:#F97316,stroke-width:3px,fill:none
-    %% 4,5 are helper lines (Gray)
-    linkStyle 4,5 stroke:#9CA3AF,stroke-width:1px,stroke-dasharray: 5 5
+    %% --- STYLING APPLICATION ---
+    class Network container
+    class Server homeContainer
+    
+    %% Style the Main Flow lines (0,1,2,3) to be Orange and Thick
+    linkStyle 0,1,2,3 stroke:#F48120,stroke-width:4px,fill:none
+    
+    %% Style the Helper line (4) to be Grey
+    linkStyle 4 stroke:#999,stroke-width:2px,stroke-dasharray: 4 4
 ```
 
 ## 🌐 Connectivity Logic
