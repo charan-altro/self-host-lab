@@ -8,72 +8,73 @@ We use **Traefik** as the central entry point (Reverse Proxy) which automaticall
 
 
 ```mermaid
+%%{init: {'theme': 'base', 'themeVariables': { 'background': '#ffffff', 'mainBkg': '#ffffff', 'primaryTextColor': '#1e293b'}}}%%
 flowchart TB
-    %% --- GLOBAL STYLES ---
-    %% 1. Basic Nodes (White Background, Sharp Corners)
-    classDef base fill:#fff,stroke:#333,stroke-width:1px,color:#333,rx:0,ry:0,font-family:Arial
-    
-    %% 2. The Client (Blue Outline)
-    classDef client fill:#fff,stroke:#0051C3,stroke-width:2px,color:#0051C3,rx:5,ry:5
-    
-    %% 3. The Network Components (Orange Theme)
-    classDef transit fill:#fff,stroke:#F48120,stroke-width:2px,color:#2c2c2c,rx:0,ry:0
-    
-    %% 4. The Docker List Box (Blue Theme, Left Aligned Text)
-    classDef listBox fill:#fff,stroke:#00A9E0,stroke-width:2px,color:#2c2c2c,rx:0,ry:0,align:left
+    %% --- GLOBAL PROFESSIONAL STYLES ---
+    %% 1. Basic Node Style (Clean white, dark gray text, subtle rounded corners)
+    classDef base fill:#ffffff,stroke:#CBD5E1,stroke-width:1px,color:#1E293B,rx:4,ry:4,font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif
 
-    %% --- CONTAINER STYLES ---
-    %% Dashed Orange for Network
-    classDef networkContainer fill:#fff,stroke:#F48120,stroke-width:2px,stroke-dasharray: 8 6,color:#F48120
-    %% Solid Blue for Server
-    classDef serverContainer fill:#EBF8FF,stroke:#00A9E0,stroke-width:2px,color:#0051C3
+    %% 2. Client/Endpoint Style (Deep Corporate Blue)
+    classDef client fill:#ffffff,stroke:#1E3A8A,stroke-width:2px,color:#1E3A8A,rx:4,ry:4,font-weight:bold
+
+    %% 3. Active Routing Path Style (Vibrant Professional Orange)
+    classDef transit fill:#ffffff,stroke:#EA580C,stroke-width:2px,color:#1E293B,rx:4,ry:4
+
+    %% 4. The App List Box (Subtle Off-White fill to distinguish content)
+    classDef listBox fill:#F8FAFC,stroke:#1E3A8A,stroke-width:1px,color:#1E293B,rx:4,ry:4,align:left
+
+    %% --- CONTAINER STYLES (Cool Gray for Professional Zones) ---
+    %% Dashed Gray for Network Zone
+    classDef networkContainer fill:#ffffff,stroke:#64748B,stroke-width:2px,stroke-dasharray: 6 4,color:#64748B
+    %% Solid Gray for Server Zone
+    classDef serverContainer fill:#F1F5F9,stroke:#64748B,stroke-width:2px,color:#64748B
 
     %% --- DIAGRAM STRUCTURE ---
 
-    %% 1. TOP: Client & Helper
+    %% 1. TOP: Inputs
     User["💻 Client / User"]:::client
-    DDNS["🔄 DDNS Updater"]:::base
+    DDNS["🔄 DDNS Updater script"]:::base
 
-    %% 2. MIDDLE: Routing Layer
+    %% 2. MIDDLE: Routing Zone
     subgraph Routing ["☁️ Ingress & Routing Layer"]
         direction TB
         DNS["🌐 Cloudflare DNS"]:::transit
         Router["🏠 Home Router"]:::transit
-        Traefik["🚦 Traefik Proxy"]:::transit
+        Traefik["🚦 Traefik Reverse Proxy"]:::transit
     end
 
-    %% 3. BOTTOM: Server & App List
+    %% 3. BOTTOM: Server Zone
     subgraph Server ["Raspberry Pi 4 - Docker Host"]
         direction TB
-        
-        %% This is the Single Box with the List you requested
-        DockerList["🐳 Docker Containers
-        ________________________
-        🖥️ Homepage Dashboard
-        🎬 Jellyfin Media
-        📁 Nextcloud Storage
-        🛡️ Pi-hole DNS
-        🔒 Tailscale VPN"]:::listBox
+        %% Compacted List Box with refined formatting
+        DockerList["🐳 **Docker Service Stack**
+        Isolating applications via containerization.
+        ____________________________________
+        🖥️ **Homepage** | Dashboard
+        🎬 **Jellyfin** | Media Server
+        📁 **Nextcloud** | Secure Storage
+        🛡️ **Pi-hole** | DNS AdBlocking
+        🔒 **Tailscale** | Mesh VPN"]:::listBox
     end
 
-    %% --- CONNECTIONS ---
+    %% --- CONNECTIONS (High Contrast) ---
     
-    %% Main Flow (Thick Orange Lines)
-    User ==>|HTTPS Request| DNS
-    DNS ==>|Resolve IP| Router
-    Router ==>|Port 443| Traefik
-    Traefik ==>|Route| DockerList
+    %% Main Active Flow (Thick Orange)
+    User ==>|HTTPS Request (443)| DNS
+    DNS ==>|Resolve Public IP| Router
+    Router ==>|Port Forward| Traefik
+    Traefik ==>|Secure Route| DockerList
 
-    %% Helper Lines (Dashed Gray)
-    DDNS -.-o|Update API| DNS
+    %% Maintenance Flow (Dashed Gray)
+    DDNS -.-o|API Update| DNS
 
     %% --- APPLY STYLES ---
     class Routing networkContainer
     class Server serverContainer
 
-    %% Link Styles: 0-3 are Orange (Active Path), 4 is Gray (Helper)
-    linkStyle 0,1,2,3 stroke:#F48120,stroke-width:3px,fill:none
-    linkStyle 4 stroke:#999,stroke-width:1px,stroke-dasharray: 4 4
+    %% Link Styles: Orange for active path, Gray for maintenance
+    linkStyle 0,1,2,3 stroke:#EA580C,stroke-width:3px,fill:none
+    linkStyle 4 stroke:#94A3B8,stroke-width:1px,stroke-dasharray: 4 4
 ```
 
 ## 🌐 Connectivity Logic
