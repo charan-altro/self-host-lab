@@ -7,52 +7,53 @@ This repository documents a self-hosted home lab running on a **Raspberry Pi 4 (
 We use **Traefik** as the central entry point (Reverse Proxy) which automatically manages SSL certificates. Since our ISP provides a dynamic IP, a **DDNS script** ensures our domain always points to the correct home address.
 
 ```mermaid
-graph TD
+graph LR
     %% Define Styles
-    classDef user fill:#2196f3,stroke:#0d47a1,stroke-width:2px,color:white
-    classDef cloud fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
-    classDef router fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    classDef proxy fill:#fff9c4,stroke:#fbc02d,stroke-width:2px
-    classDef media fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
-    classDef net fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
-    classDef dash fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    classDef user fill:#2962FF,stroke:#0039CB,stroke-width:2px,color:white,rx:50,ry:50
+    classDef cloud fill:#E1F5FE,stroke:#0288D1,stroke-width:2px,rx:10,ry:10
+    classDef router fill:#FFF3E0,stroke:#EF6C00,stroke-width:2px,rx:10,ry:10
+    classDef proxy fill:#FFFDE7,stroke:#FBC02D,stroke-width:2px,rx:10,ry:10
+    classDef app fill:#F3E5F5,stroke:#8E24AA,stroke-width:2px,rx:5,ry:5
+    classDef net fill:#E8F5E9,stroke:#2E7D32,stroke-width:2px,rx:5,ry:5
 
     User((User)):::user
     
-    subgraph Cloud [Internet & Cloud Services]
+    subgraph Cloud [Internet & Cloud]
         CF_DNS{Cloudflare DNS}:::cloud
         LE[Let's Encrypt]:::cloud
     end
     
-    subgraph Home [Home Network - Airtel Broadband]
-        Router["Router<br/>Ports 80/443"]:::router
+    subgraph Home [Home Network]
+        Router[Router]:::router
         
-        subgraph RPi [Raspberry Pi 4 - 8GB]
-            Traefik["Traefik Proxy<br/>(Auto HTTPS)"]:::proxy
-            DDNS["DDNS Updater<br/>(Python Script)"]:::net
+        subgraph RPi [Raspberry Pi 4]
+            Traefik[Traefik Proxy]:::proxy
+            DDNS[DDNS Updater]:::net
             
-            subgraph Services [Docker Apps]
-                Jellyfin[Jellyfin Media]:::media
-                Nextcloud[Nextcloud Storage]:::media
-                Homepage[Homepage Dashboard]:::dash
-                PiHole[Pi-hole DNS]:::net
-                Tailscale[Tailscale VPN]:::net
+            subgraph Docker [Docker Apps]
+                direction TB
+                Homepage[Homepage]:::app
+                Jellyfin[Jellyfin]:::app
+                Nextcloud[Nextcloud]:::app
+                PiHole[Pi-hole]:::net
+                Tailscale[Tailscale]:::net
             end
         end
     end
 
     %% Main Traffic Flow
-    User -->|1. https://app.example.com| CF_DNS
-    CF_DNS -->|2. Resolve to Home IP| Router
-    Router -->|3. Forward Traffic| Traefik
-    Traefik -->|"4. Route (Internal Network)"| Jellyfin
+    User -->|HTTPS| CF_DNS
+    CF_DNS -->|Home IP| Router
+    Router -->|Port 443| Traefik
+    
     Traefik --> Homepage
+    Traefik --> Jellyfin
     Traefik --> Nextcloud
     Traefik --> PiHole
 
     %% Automation Flows
-    DDNS -.->|Monitor & Update IP| CF_DNS
-    Traefik -.->|Get/Renew Certificates| LE
+    DDNS -.->|Update IP| CF_DNS
+    Traefik -.->|Renew Certs| LE
 ```
 
 ## 🌐 Connectivity Logic
