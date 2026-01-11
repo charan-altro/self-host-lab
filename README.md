@@ -30,26 +30,29 @@ flowchart LR
 
     %% --- DIAGRAM CONTENT ---
 
-    %% !!! MASTER CONTAINER !!!
     subgraph HomeLab ["🏠 Self-Hosted Architecture"]
         direction LR
 
-        %% 1. LEFT COLUMN: Inputs
+        %% 1. LEFT: Inputs
         subgraph Inputs ["Clients"]
             direction TB
             User["💻 Client / User"]:::client
             DDNS["🔄 DDNS Updater"]:::base
         end
 
-        %% 2. MIDDLE COLUMN: Network Stack (Strictly Vertical)
+        %% 2. MIDDLE: Network Stack (Forced Vertical)
         subgraph Network ["☁️ Network Layer"]
             direction TB
+            %% We define the nodes here to group them strictly
             DNS["🌐 Cloudflare DNS"]:::transit
             Router["🏠 Home Router"]:::transit
             Traefik["🚦 Traefik Proxy"]:::transit
+            
+            %% Force the vertical connection INSIDE the subgraph
+            DNS ==> Router ==> Traefik
         end
 
-        %% 3. RIGHT COLUMN: Server
+        %% 3. RIGHT: Server
         subgraph Server ["Raspberry Pi 4"]
             direction TB
             Docker["🐳 Docker Apps
@@ -61,19 +64,12 @@ flowchart LR
         end
     end
 
-    %% --- CONNECTIONS ---
-    
-    %% 1. ENTRANCE: Left to Right -> Top of Stack
+    %% --- EXTERNAL CONNECTIONS ---
+    %% Connecting the layers together
     User ==>|"HTTPS"| DNS
-    
-    %% 2. THE DROP: Top to Bottom inside the stack
-    DNS ==>|"Home IP"| Router
-    Router ==>|"Port 443"| Traefik
-    
-    %% 3. EXIT: Left to Right -> Bottom of Stack to Server
     Traefik ==>|"Route"| Docker
 
-    %% 4. MAINTENANCE: Side Loop
+    %% Maintenance Path
     DDNS -.-o|"Update IP"| DNS
 
     %% --- APPLY STYLES ---
@@ -81,9 +77,13 @@ flowchart LR
     class Inputs,Network,Server innerZone
 
     %% Link Styling
-    %% Orange for Data Path
-    linkStyle 0,1,2,3 stroke:#EA580C,stroke-width:3px,fill:none
-    %% Grey for Helper
+    %% 0,1 are the vertical internal links (DNS->Router->Traefik)
+    linkStyle 0,1 stroke:#EA580C,stroke-width:3px,fill:none
+    
+    %% 2 is User->DNS, 3 is Traefik->Docker
+    linkStyle 2,3 stroke:#EA580C,stroke-width:3px,fill:none
+    
+    %% 4 is DDNS
     linkStyle 4 stroke:#94A3B8,stroke-width:2px,stroke-dasharray: 4 4
 ```
 
