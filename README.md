@@ -15,10 +15,10 @@ graph TD
         LE[Let's Encrypt]
     end
     
-    subgraph Home [Home Network (Airtel Broadband)]
+    subgraph Home [Home Network - Airtel Broadband]
         Router[Router<br/>Ports 80/443]
         
-        subgraph RPi [Raspberry Pi 4 (8GB)]
+        subgraph RPi [Raspberry Pi 4 - 8GB]
             Traefik[Traefik Proxy<br/>(Auto HTTPS)]
             DDNS[DDNS Updater<br/>(Python Script)]
             
