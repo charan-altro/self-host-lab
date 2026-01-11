@@ -1,6 +1,6 @@
 # Nginx Web Server
 
-A simple Nginx container for serving a static website.
+Nginx is a high-performance, open-source web server known for its stability, rich feature set, and low resource consumption. This container provides a simple and efficient way to serve a static website, but Nginx can also be used as a reverse proxy, load balancer, and HTTP cache, making it a versatile tool for any web-based application.
 
 ## 🚀 Solution Architecture
 

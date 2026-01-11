@@ -1,5 +1,5 @@
 # self-host-lab
-Infrastructure as Code for a self-hosted home lab using Raspberry Pi 4 (Media/NAS) and Zero 2 W (Network Security). Features Pi-hole, Tailscale, Jellyfin, etc and Docker Compose workflows.
+Infrastructure as Code for a self-hosted home lab using Raspberry Pi 4 (Media/NAS) and Zero 2 W (Network Security). Features Pi-hole, Tailscale, Jellyfin, Cloudflare, etc and Docker Compose workflows.
 
 # 1. Create the main repository folder
 mkdir self-host-lab
@@ -40,6 +40,11 @@ graph TD
     Phone -- "Stream" --> P4
     PZ -.-> P4
 \`\`\`
+
+## ☁️ Cloudflare Integration
+**Role:** Secure Remote Access & DNS
+- **Cloudflare Tunnel:** Exposes local services (like Jellyfin/Dashboard) to the web without port forwarding.
+- **Zero Trust:** Adds an authentication layer (OTP/Email) before accessing the dashboard.
 
 ## 📂 Modules
 - **[01-network-security](./01-network-security)**: Pi-hole & Tailscale (Pi Zero 2 W)

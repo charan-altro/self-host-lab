@@ -1,6 +1,6 @@
 # Pi-hole
 
-A DNS sinkhole that protects your devices from unwanted content, without installing any client-side software.
+A DNS sinkhole that provides network-wide ad-blocking and tracking protection for all your devices. By routing all your DNS queries through Pi-hole, it can selectively block requests to known ad-serving and tracking domains, effectively preventing unwanted content from ever reaching your devices. This improves privacy, reduces bandwidth usage, and speeds up page loading.
 
 ## 🚀 Solution Architecture
 

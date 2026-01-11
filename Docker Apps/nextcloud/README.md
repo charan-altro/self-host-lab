@@ -1,6 +1,6 @@
 # Nextcloud All-in-One
 
-A self-hosted productivity platform that keeps you in control, providing file storage, collaboration tools, and more.
+The Nextcloud All-in-One (AIO) package provides a comprehensive, self-hosted productivity suite that puts you in control of your data. It simplifies the deployment and management of Nextcloud and its recommended components, offering not just file sync and share, but also a rich ecosystem of apps for calendars, contacts, video calls, collaborative document editing, and much more. It's the ultimate solution for taking back your digital sovereignty.
 
 ## 🚀 Solution Architecture
 

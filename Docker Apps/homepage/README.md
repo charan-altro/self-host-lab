@@ -1,6 +1,6 @@
 # Homepage Dashboard
 
-A modern, fully static, fast, secure fully proxied, browser-based dashboard.
+A highly customizable, browser-based dashboard that acts as a central hub for all your self-hosted services. It provides a clean and modern interface, with real-time status information for your Docker containers, and can be easily configured with your own services, bookmarks, and widgets through simple YAML files.
 
 ## 🚀 Solution Architecture
 

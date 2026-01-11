@@ -1,6 +1,6 @@
 # InfraWatch - Infrastructure Monitoring
 
-A monitoring stack composed of Netdata for real-time performance monitoring and Beszel for container event tracking.
+A comprehensive monitoring solution that combines the strengths of Netdata and Beszel. Netdata provides high-fidelity, real-time metrics and visualizations for your entire infrastructure, while Beszel offers a lightweight, event-driven approach to container monitoring. Together, they provide a complete picture of your system's health and performance, from low-level system metrics to high-level container events.
 
 ## 🚀 Solution Architecture
 

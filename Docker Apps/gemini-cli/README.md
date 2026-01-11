@@ -1,6 +1,6 @@
 # Gemini CLI Server
 
-A self-hosted server for interacting with Google's Gemini models, providing a web interface for easy access.
+This service provides a self-hosted web interface for Google's powerful Gemini family of models. It allows you to leverage the advanced reasoning, code generation, and language understanding capabilities of Gemini directly from your own server, ensuring privacy and control over your data. The persistent history and workspace volumes allow for continuous conversations and access to your local files.
 
 ## 🚀 Solution Architecture
 

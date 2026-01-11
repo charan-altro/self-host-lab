@@ -1,6 +1,6 @@
 # Jellyfin Media Server
 
-A Free Software Media System that puts you in control of managing and streaming your media.
+The free and open-source media server that puts you in control of your media. Organize, stream, and share your movies, TV shows, music, and photos to any device, from a web browser to a dedicated client app. With support for a wide range of formats and powerful transcoding capabilities, Jellyfin ensures a smooth streaming experience, wherever you are.
 
 ## 🚀 Solution Architecture
 

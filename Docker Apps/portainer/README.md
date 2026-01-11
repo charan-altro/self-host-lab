@@ -1,6 +1,6 @@
 # Portainer
 
-A lightweight management UI that allows you to easily manage your Docker environments.
+A powerful, lightweight management UI that allows you to easily manage your Docker environments. With Portainer, you can inspect and manage containers, images, volumes, and networks, deploy applications from stacks, and monitor your Docker host, all from an intuitive web interface. It simplifies the complexities of the command line and provides a clear overview of your containerized applications.
 
 ## 🚀 Solution Architecture
 

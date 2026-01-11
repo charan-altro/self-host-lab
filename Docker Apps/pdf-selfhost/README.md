@@ -1,6 +1,6 @@
 # PDF Compressor
 
-A self-hosted tool to compress PDF files.
+A simple, self-hosted web tool for compressing PDF files. By hosting your own PDF compressor, you can reduce the size of your documents without uploading them to a third-party service, ensuring the privacy and security of your data. It's a fast and effective way to optimize your PDFs for sharing and storage.
 
 ## 🚀 Solution Architecture
 
