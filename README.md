@@ -34,25 +34,24 @@ flowchart LR
     subgraph HomeLab ["🏠 Self-Hosted Architecture"]
         direction LR
 
-        %% 1. LEFT: Inputs (Stacked Vertically)
-        subgraph Inputs ["Clients & Sources"]
+        %% 1. LEFT: Inputs
+        subgraph Inputs ["Clients"]
             direction TB
             User["💻 Client / User"]:::client
             DDNS["🔄 DDNS Updater"]:::base
         end
 
-        %% 2. MIDDLE: Routing (Horizontal)
-        subgraph Routing ["☁️ Network Layer"]
-            direction LR
-            DNS["🌐 Cloudflare"]:::transit
-            Router["🏠 Router"]:::transit
-            Traefik["🚦 Traefik"]:::transit
+        %% 2. MIDDLE: Network Stack (VERTICAL as requested)
+        subgraph Network ["☁️ Network Layer"]
+            direction TB
+            DNS["🌐 Cloudflare DNS"]:::transit
+            Router["🏠 Home Router"]:::transit
+            Traefik["🚦 Traefik Proxy"]:::transit
         end
 
-        %% 3. RIGHT: Server (Horizontal)
+        %% 3. RIGHT: Server
         subgraph Server ["Raspberry Pi 4"]
             direction TB
-            %% Compacted Docker List
             Docker["🐳 Docker Apps
             ──────────────
             🖥️ Dashboard
@@ -63,20 +62,28 @@ flowchart LR
     end
 
     %% --- CONNECTIONS ---
+    
+    %% 1. User hits Cloudflare (Top of Stack)
     User ==>|"HTTPS"| DNS
+    
+    %% 2. The Vertical Stack Flow (Downwards)
     DNS ==>|"Home IP"| Router
     Router ==>|"Port 443"| Traefik
+    
+    %% 3. Traefik hits Server (Rightwards)
     Traefik ==>|"Route"| Docker
 
-    %% Maintenance Path
+    %% 4. Maintenance (Side loop)
     DDNS -.-o|"Update IP"| DNS
 
     %% --- APPLY STYLES ---
     class HomeLab masterZone
-    class Inputs,Routing,Server innerZone
+    class Inputs,Network,Server innerZone
 
     %% Link Styling
+    %% 0,1,2,3 are the Orange Data Path
     linkStyle 0,1,2,3 stroke:#EA580C,stroke-width:3px,fill:none
+    %% 4 is the Grey Helper Path
     linkStyle 4 stroke:#94A3B8,stroke-width:2px,stroke-dasharray: 4 4
 ```
 
