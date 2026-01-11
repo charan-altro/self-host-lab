@@ -14,22 +14,15 @@ We use **Traefik** as the central entry point (Reverse Proxy) which automaticall
     'background': '#F5F7FA',
     'primaryTextColor': '#1F2937',
     'lineColor': '#64748B',
-    'fontSize': '16px'
+    'fontSize': '14px'
   }
 }}%%
-flowchart TB
+flowchart LR
     %% --- STYLE DEFINITIONS ---
-    %% 1. Basic White Nodes (Shadow effect for depth)
-    classDef base fill:#FFFFFF,stroke:#CBD5E1,stroke-width:1px,color:#1F2937,rx:5,ry:5,font-family:sans-serif,shadow:true
-    
-    %% 2. Blue Accents (Endpoints) - Added padding logic to styles
-    classDef client fill:#FFFFFF,stroke:#2563EB,stroke-width:2px,color:#1E3A8A,rx:5,ry:5,font-weight:bold,shadow:true
-    
-    %% 3. Orange Accents (Routing Nodes)
-    classDef transit fill:#FFFFFF,stroke:#EA580C,stroke-width:2px,color:#1F2937,rx:5,ry:5,shadow:true
-
-    %% 4. The Docker List Box (MONOSPACE font for perfect alignment)
-    classDef listBox fill:#F8FAFC,stroke:#2563EB,stroke-width:1px,color:#1E293B,rx:5,ry:5,align:left,font-family:monospace
+    classDef base fill:#FFFFFF,stroke:#CBD5E1,stroke-width:1px,color:#1F2937,rx:4,ry:4,shadow:true
+    classDef client fill:#FFFFFF,stroke:#2563EB,stroke-width:2px,color:#1E3A8A,rx:4,ry:4,font-weight:bold,shadow:true
+    classDef transit fill:#FFFFFF,stroke:#EA580C,stroke-width:2px,color:#1F2937,rx:4,ry:4,shadow:true
+    classDef appStack fill:#F8FAFC,stroke:#2563EB,stroke-width:1px,color:#1E293B,rx:4,ry:4,align:left,font-family:monospace
 
     %% --- CONTAINER STYLING ---
     classDef masterZone fill:#F5F7FA,stroke:#E2E8F0,stroke-width:1px,rx:10,ry:10,color:#334155
@@ -38,52 +31,49 @@ flowchart TB
     %% --- DIAGRAM CONTENT ---
 
     %% !!! MASTER CONTAINER !!!
-    %% Added spaces to title to prevent edge clipping
-    subgraph HomeLab ["🏠 Self-Hosted Home Lab Architecture&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"]
-        direction TB
+    subgraph HomeLab ["🏠 Self-Hosted Architecture"]
+        direction LR
 
-        %% 1. TOP LAYER
-        %% Added non-breaking spaces (&nbsp;) to widen the nodes
-        User["&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;💻 Client / User&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"]:::client
-        DDNS["&nbsp;&nbsp;&nbsp;🔄 DDNS Updater&nbsp;&nbsp;&nbsp;"]:::base
-
-        %% 2. MIDDLE LAYER: Routing
-        subgraph Routing ["☁️ Ingress & Routing Layer"]
+        %% 1. LEFT: Inputs (Stacked Vertically)
+        subgraph Inputs ["Clients & Sources"]
             direction TB
-            DNS["🌐 Cloudflare DNS"]:::transit
-            Router["🏠 Home Router"]:::transit
-            Traefik["🚦 Traefik Proxy"]:::transit
+            User["💻 Client / User"]:::client
+            DDNS["🔄 DDNS Updater"]:::base
         end
 
-        %% 3. BOTTOM LAYER: Server
-        subgraph Server ["Raspberry Pi 4 - Docker Host"]
+        %% 2. MIDDLE: Routing (Horizontal)
+        subgraph Routing ["☁️ Network Layer"]
+            direction LR
+            DNS["🌐 Cloudflare"]:::transit
+            Router["🏠 Router"]:::transit
+            Traefik["🚦 Traefik"]:::transit
+        end
+
+        %% 3. RIGHT: Server (Horizontal)
+        subgraph Server ["Raspberry Pi 4"]
             direction TB
-            
-            %% MONOSPACE FORMATTING
-            %% Using unicode line char (─) for the separator
-            DockerList["🐳 Docker Service Stack
-            Containerized Applications
-            ──────────────────────────
-            🖥️ Homepage  | Dashboard
-            🎬 Jellyfin  | Media Server
-            📁 Nextcloud | Storage
-            🛡️ Pi-hole   | AdBlocking
-            🔒 Tailscale | VPN Mesh
-            &nbsp;"]:::listBox
+            %% Compacted Docker List
+            Docker["🐳 Docker Apps
+            ──────────────
+            🖥️ Dashboard
+            🎬 Media Server
+            📁 Personal Cloud
+            🛡️ DNS & VPN"]:::appStack
         end
     end
 
     %% --- CONNECTIONS ---
-    User ==>|"HTTPS (443)"| DNS
-    DNS ==>|"Resolve IP"| Router
-    Router ==>|"Port Forward"| Traefik
-    Traefik ==>|"Reverse Proxy"| DockerList
+    User ==>|"HTTPS"| DNS
+    DNS ==>|"Home IP"| Router
+    Router ==>|"Port 443"| Traefik
+    Traefik ==>|"Route"| Docker
 
-    DDNS -.-o|"Update API"| DNS
+    %% Maintenance Path
+    DDNS -.-o|"Update IP"| DNS
 
     %% --- APPLY STYLES ---
     class HomeLab masterZone
-    class Routing,Server innerZone
+    class Inputs,Routing,Server innerZone
 
     %% Link Styling
     linkStyle 0,1,2,3 stroke:#EA580C,stroke-width:3px,fill:none
