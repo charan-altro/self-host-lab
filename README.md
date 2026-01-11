@@ -8,24 +8,35 @@ We use **Traefik** as the central entry point (Reverse Proxy) which automaticall
 
 ```mermaid
 graph TD
-    User((User))
+    %% Define Styles
+    classDef user fill:#2196f3,stroke:#0d47a1,stroke-width:2px,color:white
+    classDef cloud fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+    classDef router fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef proxy fill:#fff9c4,stroke:#fbc02d,stroke-width:2px
+    classDef media fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    classDef net fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+    classDef dash fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+
+    User((User)):::user
     
     subgraph Cloud [Internet & Cloud Services]
-        CF_DNS{Cloudflare DNS}
-        LE[Let's Encrypt]
+        CF_DNS{Cloudflare DNS}:::cloud
+        LE[Let's Encrypt]:::cloud
     end
     
     subgraph Home [Home Network - Airtel Broadband]
-        Router["Router<br/>Ports 80/443"]
+        Router["Router<br/>Ports 80/443"]:::router
         
         subgraph RPi [Raspberry Pi 4 - 8GB]
-            Traefik["Traefik Proxy<br/>(Auto HTTPS)"]
-            DDNS["DDNS Updater<br/>(Python Script)"]
+            Traefik["Traefik Proxy<br/>(Auto HTTPS)"]:::proxy
+            DDNS["DDNS Updater<br/>(Python Script)"]:::net
             
             subgraph Services [Docker Apps]
-                Jellyfin[Jellyfin]
-                Dash[Dashboard]
-                Nextcloud[Nextcloud]
+                Jellyfin[Jellyfin Media]:::media
+                Nextcloud[Nextcloud Storage]:::media
+                Homepage[Homepage Dashboard]:::dash
+                PiHole[Pi-hole DNS]:::net
+                Tailscale[Tailscale VPN]:::net
             end
         end
     end
@@ -34,7 +45,10 @@ graph TD
     User -->|1. https://app.example.com| CF_DNS
     CF_DNS -->|2. Resolve to Home IP| Router
     Router -->|3. Forward Traffic| Traefik
-    Traefik -->|"4. Route (Internal Network)"| Services
+    Traefik -->|"4. Route (Internal Network)"| Jellyfin
+    Traefik --> Homepage
+    Traefik --> Nextcloud
+    Traefik --> PiHole
 
     %% Automation Flows
     DDNS -.->|Monitor & Update IP| CF_DNS
