@@ -9,47 +9,51 @@ We use **Traefik** as the central entry point (Reverse Proxy) which automaticall
 ```mermaid
 graph LR
     %% Define Styles
-    classDef user fill:#2962FF,stroke:#0039CB,stroke-width:2px,color:white,rx:50,ry:50
-    classDef cloud fill:#E1F5FE,stroke:#0288D1,stroke-width:2px,rx:10,ry:10
-    classDef router fill:#FFF3E0,stroke:#EF6C00,stroke-width:2px,rx:10,ry:10
-    classDef proxy fill:#FFFDE7,stroke:#FBC02D,stroke-width:2px,rx:10,ry:10
-    classDef app fill:#F3E5F5,stroke:#8E24AA,stroke-width:2px,rx:5,ry:5
-    classDef net fill:#E8F5E9,stroke:#2E7D32,stroke-width:2px,rx:5,ry:5
+    classDef user fill:#ffffff,stroke:#2962ff,stroke-width:2px,rx:10,ry:10,color:#2962ff
+    classDef cloud fill:#fff3e0,stroke:#ef6c00,stroke-width:2px,rx:5,ry:5,color:#e65100
+    classDef home fill:#e3f2fd,stroke:#1565c0,stroke-width:2px,rx:5,ry:5,color:#0d47a1
+    classDef proxy fill:#fff8e1,stroke:#ff8f00,stroke-width:2px,rx:5,ry:5,color:#ef6c00
+    classDef app fill:#ffffff,stroke:#1565c0,stroke-width:1px,rx:5,ry:5,color:#0d47a1
+    classDef auto fill:#f3e5f5,stroke:#ab47bc,stroke-width:1px,rx:5,ry:5,stroke-dasharray: 5 5,color:#7b1fa2
 
-    User((User)):::user
+    User[💻 User]:::user
     
-    subgraph Cloud [Internet & Cloud]
-        CF_DNS{Cloudflare DNS}:::cloud
-        LE[Let's Encrypt]:::cloud
+    subgraph Cloud [☁️ Cloudflare Network]
+        direction TB
+        CF_DNS[Cloudflare DNS]:::cloud
+        LE[Let's Encrypt]:::auto
     end
     
-    subgraph Home [Home Network]
-        Router[Router]:::router
+    subgraph Home [🏠 Home Network]
+        direction LR
+        Router[Router]:::home
         
-        subgraph RPi [Raspberry Pi 4]
+        subgraph Server [Raspberry Pi 4]
+            direction LR
             Traefik[Traefik Proxy]:::proxy
-            DDNS[DDNS Updater]:::net
+            DDNS[DDNS Updater]:::auto
             
             subgraph Docker [Docker Apps]
                 direction TB
                 Homepage[Homepage]:::app
                 Jellyfin[Jellyfin]:::app
                 Nextcloud[Nextcloud]:::app
-                PiHole[Pi-hole]:::net
-                Tailscale[Tailscale]:::net
+                PiHole[Pi-hole]:::app
+                Tailscale[Tailscale]:::app
             end
         end
     end
 
     %% Main Traffic Flow
-    User -->|HTTPS| CF_DNS
-    CF_DNS -->|Home IP| Router
-    Router -->|Port 443| Traefik
+    User ==>|HTTPS| CF_DNS
+    CF_DNS ==>|Home IP| Router
+    Router ==>|Port 443| Traefik
     
     Traefik --> Homepage
     Traefik --> Jellyfin
     Traefik --> Nextcloud
     Traefik --> PiHole
+    Traefik --> Tailscale
 
     %% Automation Flows
     DDNS -.->|Update IP| CF_DNS
