@@ -10,17 +10,17 @@ We use **Traefik** as the central entry point (Reverse Proxy) which automaticall
 ```mermaid
 flowchart LR
     %% --- GLOBAL STYLES ---
-    %% 1. Basic Nodes (White with dark text)
+    %% 1. Basic Nodes (White with dark text, sharp corners)
     classDef base fill:#fff,stroke:#333,stroke-width:1px,color:#333,rx:0,ry:0,font-family:Arial,font-weight:bold
     
     %% 2. The Client (Blue Outline)
     classDef client fill:#fff,stroke:#0051C3,stroke-width:2px,color:#0051C3,rx:5,ry:5
     
     %% 3. The "Network/Transit" Components (Orange Theme)
-    classDef transit fill:#fff,stroke:#F48120,stroke-width:2px,color:#2c2c2c,rx:4,ry:4
+    classDef transit fill:#fff,stroke:#F48120,stroke-width:2px,color:#2c2c2c,rx:0,ry:0
     
     %% 4. The "App" Components (Blue Theme)
-    classDef appNode fill:#fff,stroke:#00A9E0,stroke-width:1px,color:#2c2c2c,rx:4,ry:4
+    classDef appNode fill:#fff,stroke:#00A9E0,stroke-width:1px,color:#2c2c2c,rx:0,ry:0
 
     %% --- SUBGRAPH STYLES (The "Big Boxes") ---
     %% The "Middle" Dotted Orange Box
@@ -72,7 +72,7 @@ flowchart LR
     %% --- APPLY STYLES ---
     class Routing networkContainer
     class Server appContainer
-    class DockerStack appContainer %% Makes the inner stack blend in or stand out
+    class DockerStack appContainer
 
     %% Link Styles: 0-3 are Orange (Active Path), 4 is Gray (Helper)
     linkStyle 0,1,2,3 stroke:#F48120,stroke-width:3px,fill:none
