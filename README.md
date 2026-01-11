@@ -8,7 +8,7 @@ We use **Traefik** as the central entry point (Reverse Proxy) which automaticall
 
 
 ```mermaid
-flowchart LR
+flowchart TB
     %% --- GLOBAL STYLES ---
     %% 1. Basic Nodes (White with dark text, sharp corners)
     classDef base fill:#fff,stroke:#333,stroke-width:1px,color:#333,rx:0,ry:0,font-family:Arial,font-weight:bold
@@ -25,23 +25,23 @@ flowchart LR
     %% --- SUBGRAPH STYLES (The "Big Boxes") ---
     %% The "Middle" Dotted Orange Box
     classDef networkContainer fill:#fff,stroke:#F48120,stroke-width:2px,stroke-dasharray: 8 6,color:#F48120,font-size:14px
-    %% The "Right" Solid Blue Box
+    %% The "Bottom" Solid Blue Box
     classDef appContainer fill:#EBF8FF,stroke:#00A9E0,stroke-width:2px,color:#0051C3,font-size:14px
 
     %% --- DIAGRAM STRUCTURE ---
 
-    %% 1. USER
+    %% 1. USER (Top)
     User["💻 Client / User"]:::client
 
-    %% 2. THE ROUTING JOURNEY (Dashed Orange Box)
+    %% 2. THE ROUTING JOURNEY (Middle - Flowing Down)
     subgraph Routing ["☁️ Ingress & Routing Layer"]
-        direction LR
+        direction TB
         DNS["🌐 Cloudflare DNS"]:::transit
         Router["🏠 Home Router"]:::transit
         Traefik["🚦 Traefik Proxy"]:::transit
     end
 
-    %% 3. THE DESTINATION (Solid Blue Box)
+    %% 3. THE DESTINATION (Bottom)
     subgraph Server ["Raspberry Pi 4 - Docker Host"]
         direction TB
         
