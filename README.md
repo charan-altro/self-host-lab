@@ -10,30 +10,31 @@ We use **Traefik** as the central entry point (Reverse Proxy) which automaticall
 ```mermaid
 flowchart TB
     %% --- GLOBAL STYLES ---
-    %% 1. Basic Nodes (White with dark text, sharp corners)
-    classDef base fill:#fff,stroke:#333,stroke-width:1px,color:#333,rx:0,ry:0,font-family:Arial,font-weight:bold
+    %% 1. Basic Nodes (White Background, Sharp Corners)
+    classDef base fill:#fff,stroke:#333,stroke-width:1px,color:#333,rx:0,ry:0,font-family:Arial
     
     %% 2. The Client (Blue Outline)
     classDef client fill:#fff,stroke:#0051C3,stroke-width:2px,color:#0051C3,rx:5,ry:5
     
-    %% 3. The "Network/Transit" Components (Orange Theme)
+    %% 3. The Network Components (Orange Theme)
     classDef transit fill:#fff,stroke:#F48120,stroke-width:2px,color:#2c2c2c,rx:0,ry:0
     
-    %% 4. The "App" Components (Blue Theme)
-    classDef appNode fill:#fff,stroke:#00A9E0,stroke-width:1px,color:#2c2c2c,rx:0,ry:0
+    %% 4. The Docker List Box (Blue Theme, Left Aligned Text)
+    classDef listBox fill:#fff,stroke:#00A9E0,stroke-width:2px,color:#2c2c2c,rx:0,ry:0,align:left
 
-    %% --- SUBGRAPH STYLES (The "Big Boxes") ---
-    %% The "Middle" Dotted Orange Box
-    classDef networkContainer fill:#fff,stroke:#F48120,stroke-width:2px,stroke-dasharray: 8 6,color:#F48120,font-size:14px
-    %% The "Bottom" Solid Blue Box
-    classDef appContainer fill:#EBF8FF,stroke:#00A9E0,stroke-width:2px,color:#0051C3,font-size:14px
+    %% --- CONTAINER STYLES ---
+    %% Dashed Orange for Network
+    classDef networkContainer fill:#fff,stroke:#F48120,stroke-width:2px,stroke-dasharray: 8 6,color:#F48120
+    %% Solid Blue for Server
+    classDef serverContainer fill:#EBF8FF,stroke:#00A9E0,stroke-width:2px,color:#0051C3
 
     %% --- DIAGRAM STRUCTURE ---
 
-    %% 1. USER (Top)
+    %% 1. TOP: Client & Helper
     User["💻 Client / User"]:::client
+    DDNS["🔄 DDNS Updater"]:::base
 
-    %% 2. THE ROUTING JOURNEY (Middle - Flowing Down)
+    %% 2. MIDDLE: Routing Layer
     subgraph Routing ["☁️ Ingress & Routing Layer"]
         direction TB
         DNS["🌐 Cloudflare DNS"]:::transit
@@ -41,22 +42,19 @@ flowchart TB
         Traefik["🚦 Traefik Proxy"]:::transit
     end
 
-    %% 3. THE DESTINATION (Bottom)
+    %% 3. BOTTOM: Server & App List
     subgraph Server ["Raspberry Pi 4 - Docker Host"]
         direction TB
         
-        %% This creates the "Stack" inside the blue box
-        subgraph DockerStack ["Docker Containers"]
-            direction TB
-            Homepage["🖥️ Homepage"]:::appNode
-            Jellyfin["🎬 Jellyfin"]:::appNode
-            Nextcloud["📁 Nextcloud"]:::appNode
-            PiHole["🛡️ Pi-hole"]:::appNode
-        end
+        %% This is the Single Box with the List you requested
+        DockerList["🐳 Docker Containers
+        ________________________
+        🖥️ Homepage Dashboard
+        🎬 Jellyfin Media
+        📁 Nextcloud Storage
+        🛡️ Pi-hole DNS
+        🔒 Tailscale VPN"]:::listBox
     end
-
-    %% 4. SIDE PROCESSES
-    DDNS["🔄 DDNS Updater"]:::base
 
     %% --- CONNECTIONS ---
     
@@ -64,15 +62,14 @@ flowchart TB
     User ==>|HTTPS Request| DNS
     DNS ==>|Resolve IP| Router
     Router ==>|Port 443| Traefik
-    Traefik ==>|Route| DockerStack
+    Traefik ==>|Route| DockerList
 
     %% Helper Lines (Dashed Gray)
     DDNS -.-o|Update API| DNS
 
     %% --- APPLY STYLES ---
     class Routing networkContainer
-    class Server appContainer
-    class DockerStack appContainer
+    class Server serverContainer
 
     %% Link Styles: 0-3 are Orange (Active Path), 4 is Gray (Helper)
     linkStyle 0,1,2,3 stroke:#F48120,stroke-width:3px,fill:none
