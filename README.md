@@ -6,62 +6,75 @@ This repository documents a self-hosted home lab running on a **Raspberry Pi 4 (
 
 We use **Traefik** as the central entry point (Reverse Proxy) which automatically manages SSL certificates. Since our ISP provides a dynamic IP, a **DDNS script** ensures our domain always points to the correct home address.
 
-```mermaid
-flowchart LR
-    %% Define Styles
-    classDef user fill:#2563EB,stroke:#1D4ED8,stroke-width:2px,color:white,rx:10,ry:10
-    classDef cloud fill:#F3F4F6,stroke:#6B7280,stroke-width:2px,color:#1F2937,rx:5,ry:5
-    classDef router fill:#F97316,stroke:#C2410C,stroke-width:2px,color:white,rx:5,ry:5
-    classDef proxy fill:#F59E0B,stroke:#B45309,stroke-width:2px,color:white,rx:5,ry:5
-    
-    %% App specific colors
-    classDef dashboard fill:#3B82F6,stroke:#1D4ED8,stroke-width:2px,color:white,rx:5,ry:5
-    classDef media fill:#8B5CF6,stroke:#5B21B6,stroke-width:2px,color:white,rx:5,ry:5
-    classDef storage fill:#10B981,stroke:#047857,stroke-width:2px,color:white,rx:5,ry:5
-    classDef dns fill:#EF4444,stroke:#B91C1C,stroke-width:2px,color:white,rx:5,ry:5
-    classDef vpn fill:#EC4899,stroke:#BE185D,stroke-width:2px,color:white,rx:5,ry:5
-    classDef script fill:#6366F1,stroke:#4338CA,stroke-width:2px,color:white,rx:5,ry:5,stroke-dasharray: 5 5
+```flowchart LR
+    %% --- Base Styles for a Clean, White Theme ---
+    %% General Node Style: White fill, colored borders, dark text
+    classDef baseNode fill:white,stroke-width:2px,color:#1F2937,rx:8,ry:8,font-family:sans-serif
 
-    User[💻 User]:::user
-    
-    subgraph Internet [☁️ Internet]
+    %% Specific Role Styles (Colors applied to border stroke only)
+    classDef user stroke:#2563EB,fill:#EFF6FF %% Blue border, very light blue fill
+    classDef internetNode stroke:#9CA3AF,stroke-dasharray: 5 5 %% Gray dashed border
+    classDef routerGateway stroke:#F97316,stroke-width:3px %% Strong Orange border for main gateway components
+    classDef dockerApp stroke:#3B82F6 %% Standard Blue border for apps
+    classDef scriptNode stroke:#6366F1,stroke-dasharray: 5 5 %% Indigo dashed border for scripts
+
+    %% Subgraph Styles to match reference image containers
+    classDef subGraphContainer fill:#F9FAFB,stroke:#D1D5DB,stroke-width:2px,stroke-dasharray: 8 6,color:#374151,rx:10,ry:10
+    classDef dockerSubGraph fill:#EFF6FF,stroke:#3B82F6,stroke-width:2px,color:#1F2937,rx:10,ry:10
+
+    %% --- Nodes & Structure ---
+    User[💻 User]:::user:::baseNode
+
+    subgraph Internet ["☁️ Internet"]
         direction TB
-        CF_DNS[Cloudflare DNS]:::cloud
-        LE[Let's Encrypt]:::cloud
+        CF_DNS["Cloudflare DNS"]:::internetNode:::baseNode
+        LE["Let's Encrypt"]:::internetNode:::baseNode
     end
-    
-    subgraph Home [🏠 Home Network]
-        Router[Router]:::home
+
+    subgraph Home ["🏠 Home Network"]
+        Router[Router]:::routerGateway:::baseNode
         
-        subgraph Server [Raspberry Pi 4]
-            Traefik[Traefik Proxy]:::proxy
-            DDNS[DDNS Updater]:::script
+        subgraph Server ["Raspberry Pi 4 Server"]
+            Traefik["Traefik Reverse Proxy"]:::routerGateway:::baseNode
+            DDNS["🔄 DDNS Updater script"]:::scriptNode:::baseNode
             
-            subgraph Docker [Docker Apps]
+            subgraph Docker ["🐳 Docker Containers"]
                 direction TB
-                Homepage[Homepage]:::dashboard
-                Jellyfin[Jellyfin]:::media
-                Nextcloud[Nextcloud]:::storage
-                PiHole[Pi-hole]:::dns
-                Tailscale[Tailscale]:::vpn
+                Homepage["Homepage Dashboard"]:::dockerApp:::baseNode
+                Jellyfin["🎬 Jellyfin Media"]:::dockerApp:::baseNode
+                Nextcloud["📁 Nextcloud Storage"]:::dockerApp:::baseNode
+                PiHole["🛡️ Pi-hole DNS"]:::dockerApp:::baseNode
+                Tailscale["🔒 Tailscale VPN"]:::dockerApp:::baseNode
             end
         end
     end
 
-    %% Main Traffic Flow
-    User ==>|HTTPS| CF_DNS
-    CF_DNS ==>|Home IP| Router
-    Router ==>|Port 443| Traefik
+    %% --- Traffic Flow ---
+    %% Main Data Path (Thick Orange Lines)
+    User ==>|HTTPS Request| CF_DNS
+    CF_DNS ==>|Resolve to Home IP| Router
+    Router ==>|Port 443 Forward| Traefik
     
+    %% Internal Routing (Thinner standard lines)
     Traefik --> Homepage
     Traefik --> Jellyfin
     Traefik --> Nextcloud
     Traefik --> PiHole
     Traefik --> Tailscale
 
-    %% Automation Flows
-    DDNS -.->|Update IP| CF_DNS
-    Traefik -.->|Renew Certs| LE
+    %% Automation/Management Flows (Dotted lines)
+    DDNS -.->|Periodic IP Update| CF_DNS
+    Traefik -.->|ACME Challenge / Renew Certs| LE
+
+    %% --- Applying Subgraph Styles ---
+    class Internet subGraphContainer
+    class Home subGraphContainer
+    class Server subGraphContainer
+    class Docker dockerSubGraph
+
+    %% --- Link Styling to mimic reference image ---
+    %% Style the first 3 main links to be thick and orange
+    linkStyle 0,1,2 stroke:#F97316,stroke-width:4px,fill:none
 ```
 
 ## 🌐 Connectivity Logic
