@@ -9,71 +9,74 @@ We use **Traefik** as the central entry point (Reverse Proxy) which automaticall
 
 ```mermaid
 flowchart LR
-    %% --- THEME: CLOUDFLARE STYLE ---
-    %% 1. Basic White Node
-    classDef base fill:#fff,stroke:#666,stroke-width:1px,color:#333,rx:5,ry:5
+    %% --- GLOBAL STYLES ---
+    %% 1. Basic Nodes (White with dark text)
+    classDef base fill:#fff,stroke:#333,stroke-width:1px,color:#333,rx:0,ry:0,font-family:Arial,font-weight:bold
     
-    %% 2. The "Client" and "Destination" (Blue Theme)
-    classDef blueNode fill:#EBF8FF,stroke:#00A9E0,stroke-width:2px,color:#0051C3
+    %% 2. The Client (Blue Outline)
+    classDef client fill:#fff,stroke:#0051C3,stroke-width:2px,color:#0051C3,rx:5,ry:5
     
-    %% 3. The "Network Middle" (Orange Theme - Active Path)
-    classDef orangeNode fill:#fff,stroke:#F48120,stroke-width:3px,color:#333
+    %% 3. The "Network/Transit" Components (Orange Theme)
+    classDef transit fill:#fff,stroke:#F48120,stroke-width:2px,color:#2c2c2c,rx:4,ry:4
     
-    %% 4. Containers/Groups (Dashed Orange or Blue)
-    classDef container fill:#fff,stroke:#F48120,stroke-width:2px,stroke-dasharray: 5 5,color:#F48120,rx:10,ry:10
-    classDef homeContainer fill:#F9FAFB,stroke:#9CA3AF,stroke-width:2px,stroke-dasharray: 8 8,color:#6B7280,rx:10,ry:10
+    %% 4. The "App" Components (Blue Theme)
+    classDef appNode fill:#fff,stroke:#00A9E0,stroke-width:1px,color:#2c2c2c,rx:4,ry:4
 
-    %% --- STRUCTURE ---
+    %% --- SUBGRAPH STYLES (The "Big Boxes") ---
+    %% The "Middle" Dotted Orange Box
+    classDef networkContainer fill:#fff,stroke:#F48120,stroke-width:2px,stroke-dasharray: 8 6,color:#F48120,font-size:14px
+    %% The "Right" Solid Blue Box
+    classDef appContainer fill:#EBF8FF,stroke:#00A9E0,stroke-width:2px,color:#0051C3,font-size:14px
 
-    %% A. The User (Start)
-    User("💻 User / Client"):::blueNode
+    %% --- DIAGRAM STRUCTURE ---
 
-    %% B. The Network (Middle Section)
-    subgraph Network ["☁️ Internet & Routing"]
+    %% 1. USER
+    User["💻 Client / User"]:::client
+
+    %% 2. THE ROUTING JOURNEY (Dashed Orange Box)
+    subgraph Routing ["☁️ Ingress & Routing Layer"]
         direction LR
-        DNS["Cloudflare DNS"]:::orangeNode
-        Router["🏠 Home Router"]:::orangeNode
-        Traefik["🚦 Traefik Proxy"]:::orangeNode
+        DNS["🌐 Cloudflare DNS"]:::transit
+        Router["🏠 Home Router"]:::transit
+        Traefik["🚦 Traefik Proxy"]:::transit
     end
 
-    %% C. The Destination (End)
-    subgraph Server ["Raspberry Pi 4"]
+    %% 3. THE DESTINATION (Solid Blue Box)
+    subgraph Server ["Raspberry Pi 4 - Docker Host"]
         direction TB
-        %% This invisible node helps align the title or structure if needed
         
-        subgraph Apps ["🐳 Docker Service Stack"]
+        %% This creates the "Stack" inside the blue box
+        subgraph DockerStack ["Docker Containers"]
             direction TB
-            %% Stacking these looks like the 'Server Rack' in your reference image
-            Homepage["Homepage Dashboard"]:::blueNode
-            Jellyfin["🎬 Jellyfin Media"]:::blueNode
-            Nextcloud["📁 Nextcloud Storage"]:::blueNode
-            PiHole["🛡️ Pi-hole & VPN"]:::blueNode
+            Homepage["🖥️ Homepage"]:::appNode
+            Jellyfin["🎬 Jellyfin"]:::appNode
+            Nextcloud["📁 Nextcloud"]:::appNode
+            PiHole["🛡️ Pi-hole"]:::appNode
         end
-        
-        %% Sidecar Scripts (Helper)
-        DDNS("🔄 DDNS Script"):::base
     end
+
+    %% 4. SIDE PROCESSES
+    DDNS["🔄 DDNS Updater"]:::base
 
     %% --- CONNECTIONS ---
     
-    %% 1. The "Golden Path" (Thick Orange Line) represents the Request Flow
+    %% Main Flow (Thick Orange Lines)
     User ==>|HTTPS Request| DNS
-    DNS ==>|Home Public IP| Router
+    DNS ==>|Resolve IP| Router
     Router ==>|Port 443| Traefik
-    Traefik ==>|Route| Apps
+    Traefik ==>|Route| DockerStack
 
-    %% 2. Maintenance Links (Dotted/Grey)
-    DDNS -.-o|Update IP| DNS
+    %% Helper Lines (Dashed Gray)
+    DDNS -.-o|Update API| DNS
 
-    %% --- STYLING APPLICATION ---
-    class Network container
-    class Server homeContainer
-    
-    %% Style the Main Flow lines (0,1,2,3) to be Orange and Thick
-    linkStyle 0,1,2,3 stroke:#F48120,stroke-width:4px,fill:none
-    
-    %% Style the Helper line (4) to be Grey
-    linkStyle 4 stroke:#999,stroke-width:2px,stroke-dasharray: 4 4
+    %% --- APPLY STYLES ---
+    class Routing networkContainer
+    class Server appContainer
+    class DockerStack appContainer %% Makes the inner stack blend in or stand out
+
+    %% Link Styles: 0-3 are Orange (Active Path), 4 is Gray (Helper)
+    linkStyle 0,1,2,3 stroke:#F48120,stroke-width:3px,fill:none
+    linkStyle 4 stroke:#999,stroke-width:1px,stroke-dasharray: 4 4
 ```
 
 ## 🌐 Connectivity Logic
