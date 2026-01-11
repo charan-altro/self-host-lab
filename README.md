@@ -17,46 +17,47 @@ We use **Traefik** as the central entry point (Reverse Proxy) which automaticall
     'fontSize': '14px'
   }
 }}%%
-flowchart TD
-    %% SWITCHING TO TOP-DOWN (TD) allows precise vertical control
-    %% But we will use "clusters" to fake the horizontal aspect
-    
-    %% --- STYLES ---
+flowchart LR
+    %% --- STYLE DEFINITIONS ---
     classDef base fill:#FFFFFF,stroke:#CBD5E1,stroke-width:1px,color:#1F2937,rx:4,ry:4,shadow:true
     classDef client fill:#FFFFFF,stroke:#2563EB,stroke-width:2px,color:#1E3A8A,rx:4,ry:4,font-weight:bold,shadow:true
-    classDef transit fill:#FFFFFF,stroke:#EA580C,stroke-width:2px,color:#1F2937,rx:4,ry:4,shadow:true
-    classDef appStack fill:#F8FAFC,stroke:#2563EB,stroke-width:1px,color:#1E293B,rx:4,ry:4,align:left,font-family:monospace
     
-    %% Container Styles
+    %% The Network Stack Style (Orange Border, centered text)
+    classDef netStack fill:#FFFFFF,stroke:#EA580C,stroke-width:2px,color:#1F2937,rx:4,ry:4,shadow:true,align:center
+    
+    %% The App Stack Style (Blue Border, left aligned)
+    classDef appStack fill:#F8FAFC,stroke:#2563EB,stroke-width:1px,color:#1E293B,rx:4,ry:4,align:left,font-family:monospace
+
+    %% --- CONTAINER STYLING ---
     classDef masterZone fill:#F5F7FA,stroke:#E2E8F0,stroke-width:1px,rx:10,ry:10,color:#334155
     classDef innerZone fill:#FFFFFF,stroke:#94A3B8,stroke-width:1px,stroke-dasharray: 6 4,color:#475569
 
-    %% --- MAIN CONTAINER ---
+    %% --- DIAGRAM CONTENT ---
+
     subgraph HomeLab ["🏠 Self-Hosted Architecture"]
-        
-        %% We use invisible links to place USER left of DNS, and SERVER right of TRAEFIK
-        %% But standard Mermaid TD makes this hard.
-        
-        %% Let's try the LR approach one last time with 'subgraph' ordering hacks
         direction LR
 
-        subgraph Inputs [Clients]
+        %% 1. LEFT: Inputs
+        subgraph Inputs ["Clients"]
             direction TB
             User["💻 Client / User"]:::client
             DDNS["🔄 DDNS Updater"]:::base
         end
 
-        subgraph Network [Network Stack]
+        %% 2. MIDDLE: Network Stack (FORCED VERTICAL VIA HTML)
+        subgraph Network ["☁️ Network Layer"]
             direction TB
-            DNS["🌐 Cloudflare DNS"]:::transit
-            Router["🏠 Home Router"]:::transit
-            Traefik["🚦 Traefik Proxy"]:::transit
-            
-            %% Force order
-            DNS --> Router --> Traefik
+            %% This node uses HTML <br> tags to force the vertical look
+            %% It simulates the stack perfectly in a single box
+            NetStack["🌐 <b>Cloudflare DNS</b>
+            ⬇️ <i>(Home IP)</i>
+            🏠 <b>Home Router</b>
+            ⬇️ <i>(Port 443)</i>
+            🚦 <b>Traefik Proxy</b>"]:::netStack
         end
 
-        subgraph Server [Server]
+        %% 3. RIGHT: Server
+        subgraph Server ["Raspberry Pi 4"]
             direction TB
             Docker["🐳 Docker Apps
             ──────────────
@@ -67,20 +68,24 @@ flowchart TD
         end
     end
 
-    %% CONNECTIONS
-    User --> DNS
-    Traefik --> Docker
-    DDNS -.-o DNS
+    %% --- CONNECTIONS ---
+    
+    %% User hits the Network Stack
+    User ==>|"HTTPS Request"| NetStack
+    
+    %% Network Stack hits the Server
+    NetStack ==>|"Secure Route"| Docker
 
-    %% LINK STYLES
-    linkStyle 0,1 stroke:#EA580C,stroke-width:3px
-    linkStyle 2 stroke:#EA580C,stroke-width:3px
-    linkStyle 3 stroke:#EA580C,stroke-width:3px
-    linkStyle 4 stroke:#94A3B8,stroke-width:2px,stroke-dasharray: 4 4
+    %% Maintenance Path
+    DDNS -.-o|"Update IP"| NetStack
 
-    %% APPLY STYLES
+    %% --- APPLY STYLES ---
     class HomeLab masterZone
     class Inputs,Network,Server innerZone
+
+    %% Link Styling
+    linkStyle 0,1 stroke:#EA580C,stroke-width:3px,fill:none
+    linkStyle 2 stroke:#94A3B8,stroke-width:2px,stroke-dasharray: 4 4
 ```
 
 ## 🌐 Connectivity Logic
