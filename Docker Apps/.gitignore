@@ -1,0 +1,29 @@
+# --- System Files (Don't upload these) ---
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+
+# --- Editors (VS Code / JetBrains) ---
+.vscode/
+.idea/
+*.swp
+
+# --- Secrets & Environment Variables (CRITICAL) ---
+.env
+.env.local
+*.key
+*.pem
+secrets.yaml
+
+# --- Docker & Dependencies ---
+docker-compose.override.yml
+node_modules/
+venv/
+__pycache__/
+
+# --- Application Specific ---
+# Exclude actual media files (Too big for Git)
+/02-media-nas/media/
+/02-media-nas/cache/
+EOF

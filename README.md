@@ -1,128 +1,165 @@
-# self-host-lab
-Infrastructure as Code for a self-hosted home lab using Raspberry Pi 4 (Media/NAS) and Zero 2 W (Network Security). Features Pi-hole, Tailscale, Jellyfin, etc and Docker Compose workflows.
+# 🏠 Self-Hosted Home Lab
 
-# 1. Create the main repository folder
-mkdir self-host-lab
-cd self-host-lab
+This repository documents a self-hosted home lab running on a **Raspberry Pi 4 (8GB)**. It features a secure, automated HTTPS setup using Traefik, Let's Encrypt, and Cloudflare DDNS to handle dynamic IPs from the ISP (Airtel).
 
-# 2. Initialize Git
-git init
+## 🏗️ Architecture & Security Flow
 
-# 3. Create the Service Folders
-mkdir 01-network-security
-mkdir 02-media-nas
-mkdir 03-dashboard
+We use **Traefik** as the central entry point (Reverse Proxy) which automatically manages SSL certificates. Since our ISP provides a dynamic IP, a **DDNS script** ensures our domain always points to the correct home address.
 
-# ==========================================
-# 4. Create Root README with Global Diagram
-# ==========================================
-cat > README.md <<EOF
-# 🏠 self-host-lab
+```mermaid
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'background': '#F5F7FA',
+    'primaryTextColor': '#1F2937',
+    'lineColor': '#64748B',
+    'fontSize': '14px'
+  },
+  'flowchart': { 'rankSpacing': 20, 'nodeSpacing': 20 }
+}}%%
+flowchart LR
+    %% --- STYLES ---
+    classDef base fill:#FFFFFF,stroke:#CBD5E1,stroke-width:1px,color:#1F2937,rx:4,ry:4,shadow:true
+    classDef script fill:#F8FAFC,stroke:#2563EB,stroke-width:2px,color:#1E3A8A,rx:4,ry:4,font-family:monospace,align:left
+    classDef cloud fill:#FFFFFF,stroke:#EA580C,stroke-width:2px,color:#1F2937,rx:4,ry:4,shadow:true
 
-Documentation for my personal home infrastructure running on Raspberry Pi.
+    %% --- STRUCTURE ---
+    subgraph Maintenance ["🔄 DDNS Auto-Sync Loop - Keep DNS Always Updated"]
+        direction LR
+        
+        %% RASPBERRY PI SIDE
+        subgraph Pi ["Raspberry Pi 4 (Local)"]
+            direction TB
+            DDNS_Script["🐍 <b>DDNS Script</b>
+            ──────────────
+            ⏰ Runs every 5 mins
+            🔍 Detects Public IP
+            📊 Compares with DNS"]:::script
+        end
 
-## 🏗 System Architecture
-\`\`\`mermaid
-graph TD
-    %% Global Styling
-    classDef mobile fill:#f57f17,stroke:#e65100,stroke-width:2px,color:white
-    classDef security fill:#43a047,stroke:#1b5e20,stroke-width:2px,color:white,stroke-dasharray: 5 5
-    classDef media fill:#7b1fa2,stroke:#4a148c,stroke-width:2px,color:white
-    
-    Phone(My Phone/Laptop):::mobile
-    
-    subgraph Home [Home Network]
-        PZ(<b>Pi Zero 2 W</b><br/>Network Guard):::security
-        P4(<b>Pi 4</b><br/>Media & NAS):::media
+        %% CLOUDFLARE SIDE
+        subgraph Cloud ["Cloudflare Cloud (Remote)"]
+            direction TB
+            API["☁️ <b>Cloudflare API</b>
+            ──────────────
+            🔐 Secure Update
+            📍 Updates 'A' Record
+            ✅ Confirms Change"]:::cloud
+        end
     end
 
-    Phone -- "DNS (Ads)" --> PZ
-    Phone -- "Stream" --> P4
-    PZ -.-> P4
-\`\`\`
+    %% --- LOGIC FLOW ---
+    DDNS_Script ==>|"If IP Changed"| API
+    API -.->|"Success Response"| DDNS_Script
 
-## 📂 Modules
-- **[01-network-security](./01-network-security)**: Pi-hole & Tailscale (Pi Zero 2 W)
-- **[02-media-nas](./02-media-nas)**: Jellyfin & Storage (Pi 4)
-- **[03-dashboard](./03-dashboard)**: Status Homepage
-EOF
+    %% --- STYLES ---
+    class Maintenance masterZone
+    classDef masterZone fill:#F5F7FA,stroke:#E2E8F0,stroke-width:2px,rx:10,ry:10,color:#334155
+    linkStyle 0 stroke:#2563EB,stroke-width:3px
+    linkStyle 1 stroke:#94A3B8,stroke-width:2px,stroke-dasharray: 4 4
+```
 
-# ==========================================
-# 5. Create Network Security README (Pi Zero)
-# ==========================================
-cat > 01-network-security/README.md <<EOF
-# 🛡️ 01. Network Security Layer
+```mermaid
+%%{init: {
+  'theme': 'base',
+  'themeVariables': {
+    'background': '#F5F7FA',
+    'primaryTextColor': '#1F2937',
+    'lineColor': '#64748B',
+    'fontSize': '14px'
+  },
+  'flowchart': { 'rankSpacing': 15, 'nodeSpacing': 15 }
+}}%%
+flowchart LR
+    %% --- STYLES ---
+    classDef client fill:#FFFFFF,stroke:#2563EB,stroke-width:2px,color:#1E3A8A,rx:4,ry:4,font-weight:bold,shadow:true
+    classDef netStack fill:#FFFFFF,stroke:#EA580C,stroke-width:2px,color:#1F2937,rx:4,ry:4,shadow:true,align:center
+    classDef appStack fill:#F8FAFC,stroke:#2563EB,stroke-width:1px,color:#1E293B,rx:4,ry:4,align:left,font-family:monospace
+    classDef lock fill:#DCFCE7,stroke:#15803D,stroke-width:2px,color:#15803D,rx:4,ry:4,font-weight:bold
+    
+    %% --- STRUCTURE ---
+    subgraph Traffic ["🔒 End-to-End Encrypted HTTPS Traffic Path"]
+        direction LR
 
-**Device:** Raspberry Pi Zero 2 W  
-**Role:** Ad-blocking & VPN Entry
+        %% 1. USER
+        User["💻 <b>User / Client</b>
+        <i>(External Request)</i>"]:::client
 
-## 🧩 Split-Tunnel Architecture
-\`\`\`mermaid
-graph TD
-    classDef dns fill:#c62828,stroke:#b71c1c,color:white
-    classDef net fill:#1565c0,stroke:#0d47a1,color:white
+        %% 2. NETWORK STACK
+        subgraph NetLayer ["Network Path (Secure)"]
+            Stack["🌐 <b>Cloudflare DNS</b>
+            ⬇️ <i>(Resolves to IP)</i>
+            🏠 <b>Home Router</b>
+            ⬇️ <i>(Port Forward :443)</i>
+            🚦 <b>Traefik</b>"]:::netStack
+        end
 
-    Phone[Phone 5G]
-    PiZero[Pi Zero 2 W]:::dns
-    Internet[The Internet]:::net
+        %% 3. APPS
+        subgraph Server ["🐳 Docker Container Stack"]
+            Apps["
+            🖥️ Dashboard (Heimdall)
+            🎬 Media (Jellyfin)
+            📁 Storage (Nextcloud)
+            🛡️ DNS/Security (Pi-hole)"]:::appStack
+        end
 
-    Phone -- "1. Heavy Data (Netflix)" --> Internet
-    Phone -- "2. DNS Query (Ad Check)" --> PiZero
-    PiZero -- "Block/Allow" --> Phone
-\`\`\`
-EOF
+        %% 4. SSL
+        SSL["🔐 <b>SSL/TLS</b>
+        <i>(Let's Encrypt)</i>"]:::lock
+    end
 
-# ==========================================
-# 6. Create Media README + Docker Compose (Pi 4)
-# ==========================================
-cat > 02-media-nas/README.md <<EOF
-# 🎬 02. Media & NAS Layer
+    %% --- CONNECTIONS ---
+    User ==>|"HTTPS Request :443"| Stack
+    SSL -.->|"Certificates"| Stack
+    Stack ==>|"Secure Route"| Apps
 
-**Device:** Raspberry Pi 4 Model B  
-**Role:** Media Streaming & File Storage
+    %% --- STYLES ---
+    linkStyle 0 stroke:#EA580C,stroke-width:3px
+    linkStyle 1 stroke:#15803D,stroke-width:2px,stroke-dasharray: 4 4
+    linkStyle 2 stroke:#2563EB,stroke-width:3px
+    
+    classDef masterZone fill:#F5F7FA,stroke:#E2E8F0,stroke-width:2px,rx:10,ry:10,color:#334155
+    classDef innerZone fill:#FFFFFF,stroke:#94A3B8,stroke-width:1px,stroke-dasharray: 6 4
+    class Traffic masterZone
+    class NetLayer,Server innerZone
+```
 
-## 📼 Media Flow
-\`\`\`mermaid
-graph LR
-    classDef hdd fill:#fbc02d,stroke:#f57f17,color:black
-    classDef app fill:#8e24aa,stroke:#4a148c,color:white
+## 🌐 Connectivity & Security Logic
 
-    User[User Device]
-    Jellyfin[Jellyfin Container]:::app
-    HDD[(USB Hard Drive)]:::hdd
+### 1. Dynamic DNS (DDNS) - Keep Your Domain Updated
+**Problem:** Airtel Broadband changes the Public IP address frequently (no static IP).
 
-    User -- "Request Movie" --> Jellyfin
-    Jellyfin -- "Read File" --> HDD
-    Jellyfin -- "Stream Video" --> User
-\`\`\`
-EOF
+**Solution:** [Cloudflare DDNS Updater](https://github.com/K0p1-Git/cloudflare-ddns-updater)
+- **How it works:** 
+  - Runs as a scheduled Cron job (every 5 minutes)
+  - Detects the current Public IP
+  - Compares it with the DNS `A` record in Cloudflare
+  - If changed, automatically updates via Cloudflare API
+- **Result:** `*.example.com` always resolves to your home network, even when ISP changes your IP
 
-# Create the actual docker-compose file for Jellyfin
-cat > 02-media-nas/docker-compose.yml <<EOF
-services:
-  jellyfin:
-    image: jellyfin/jellyfin
-    container_name: jellyfin
-    user: 1000:1000
-    network_mode: "host"
-    volumes:
-      - ./config:/config
-      - ./cache:/cache
-      - /mnt/media:/media
-    restart: unless-stopped
-EOF
+### 2. Reverse Proxy & HTTPS (Traefik) - Secure Gateway
+**Role:** Manages all incoming traffic and SSL certificates.
+- **Listens on:** Ports 80 (HTTP) and 443 (HTTPS)
+- **Let's Encrypt Integration:** 
+  - Automatically requests SSL certificates for all subdomains
+  - Handles certificate renewal before expiration
+- **HTTP → HTTPS Redirect:** All unencrypted traffic is redirected to secure HTTPS
 
-# ==========================================
-# 7. Create Dashboard README
-# ==========================================
-cat > 03-dashboard/README.md <<EOF
-# 📊 03. Dashboard
-**Software:** Homepage / Dashy
-**Goal:** Monitor uptime of Pi Zero and Pi 4.
-EOF
+### 3. Cloudflare DNS & Security (Optional Tunnel Alternative)
+You can optionally use **Cloudflare Tunnel** instead of manual port forwarding:
 
-# 8. Create a .gitignore
-echo ".DS_Store" > .gitignore
-echo ".env" >> .gitignore
+| Method | Pros | Cons |
+|--------|------|------|
+| **DDNS + Port Forward** (Current) | Full control, Lower latency, Self-hosted | Manual port setup, ISP may block ports, Dynamic IP updates needed |
+| **Cloudflare Tunnel** | No port forwarding needed, NAT bypass, Zero Trust Security | Added latency, Cloudflare dependency, Slower for local users |
 
-echo "✅ Repository 'self-host-lab' created successfully!"
+**Current Setup:** Uses DDNS + Port Forward (443) → More performant for home network access
+
+## 🛠️ Hardware & Software Stack
+
+| Component | Role | Key Services |
+|-----------|------|--------------|
+| **Raspberry Pi 4 (8GB)** | Central Server | Docker Engine, Traefik Reverse Proxy, Let's Encrypt, DDNS Script, Cron Scheduler |
+| **Cloudflare DNS** | DNS Management | Domain Resolution, DDNS Updates via API, DDoS Protection |
+| **Docker Containers** | Applications | Jellyfin (Media), Nextcloud (Cloud Storage), Pi-hole (DNS/Security), Heimdall (Dashboard) |
+| **Traefik** | Entry Point | SSL Termination, Load Balancing, Automatic Certificate Management |
