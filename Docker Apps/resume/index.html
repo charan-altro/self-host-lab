@@ -258,7 +258,25 @@
             }
             .fab-print { display: none; } /* Hide button */
             a { text-decoration: none; color: inherit; }
+            .nav-buttons { display: none; }
         }
+        .nav-buttons {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+        .btn-nav {
+            background: var(--primary);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 0.85em;
+            font-weight: 600;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: background 0.2s;
+        }
+        .btn-nav:hover { background: #1d4ed8; }
     </style>
 </head>
 <body>
@@ -268,6 +286,9 @@
     </button>
 
     <div class="resume-container">
+        <div class="nav-buttons">
+            <a href="cv.html" class="btn-nav">View Detailed CV <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
         <aside class="sidebar">
             <div class="profile-photo"></div>
             
@@ -283,28 +304,31 @@
                 </div>
                 <div class="contact-item">
                     <i class="fa-solid fa-location-dot"></i>
-                    <span>Bangalore, India</span>
+                    <span>Whitefield, Bangalore</span>
+                </div>
+                <div class="contact-item" style="font-size: 0.8em; color: #94a3b8; margin-left: 35px; margin-top: -10px;">
+                    201, SLV Arcade, 560066
                 </div>
             </section>
 
             <section>
-                <h2>Tech Stack</h2>
+                <h2>Key Skills</h2>
                 <div class="skill-list">
                     <div>
                         <span>Middleware (WebLogic)</span>
                         <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 95%"></div></div>
                     </div>
                     <div>
-                        <span>CI/CD (Jenkins, Ansible)</span>
+                        <span>Scripting (Python, Bash)</span>
                         <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 90%"></div></div>
                     </div>
                     <div>
-                        <span>Docker & Kubernetes</span>
-                        <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 80%"></div></div>
+                        <span>CI/CD (Jenkins, Ansible)</span>
+                        <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 85%"></div></div>
                     </div>
                     <div>
-                        <span>Python & Bash Scripting</span>
-                        <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 85%"></div></div>
+                        <span>Cloud (AWS, Azure, K8s)</span>
+                        <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 80%"></div></div>
                     </div>
                 </div>
             </section>
@@ -312,8 +336,8 @@
             <section>
                 <h2>Education</h2>
                 <div style="font-size: 0.9em; line-height: 1.5;">
-                    <p>• BE in ME<br><span style="color: #94a3b8; font-size: 0.9em;">DBIT College (2014-2017)</span></p>
-                    <p>• Diploma in ME<br><span style="color: #94a3b8; font-size: 0.9em;">GPTR (2011-2014)</span></p>
+                    <p>• BE in Mechanical Eng.<br><span style="color: #94a3b8; font-size: 0.9em;">DBIT College (2014-2017)</span></p>
+                    <p>• Diploma in Mechanical<br><span style="color: #94a3b8; font-size: 0.9em;">GPTR (2011-2014)</span></p>
                 </div>
             </section>
         </aside>
@@ -327,12 +351,10 @@
             <section>
                 <div class="section-title">
                     <i class="fa-solid fa-user"></i>
-                    Professional Summary
+                    Career Objective
                 </div>
                 <p style="color: #475569; line-height: 1.6;">
-                    Over 3 years of progressive experience in Middleware and DevOps, including Build setup, Continuous Integration, and Source Code Management. 
-                    Experienced in automating application deployment in Dev, QA, and Production environments using Jenkins, Ansible, Docker, and Kubernetes. 
-                    Strong background in Linux administration and WebLogic Server management.
+                    Seeking a challenging career opportunity as a DevOps Engineer where my knowledge and experience can be shared and enriched.
                 </p>
             </section>
 
@@ -349,10 +371,11 @@
                     </div>
                     <span class="timeline-date">Dec 2020 - Present</span>
                     <ul class="description">
-                        <li>Configured CI tools (Jenkins) from scratch, managed plugins, slave nodes, and build/deployment jobs.</li>
-                        <li>Automated application deployment in Dev, QA, and Production environments using Ansible playbooks and modules.</li>
-                        <li>Managed cloud-based applications using Kubernetes, Docker, Rancher, and Harbor.</li>
-                        <li>Configured Clusters, load-balancing, and fail-over solutions for WebLogic application server.</li>
+                        <li>Over 3 Years of progressive experience in Middleware and DevOps including Build setup, CI, and SCM process setup.</li>
+                        <li>Configured Jenkins from scratch, managed plugins, slave nodes, and created build/deployment jobs.</li>
+                        <li>Automated application deployment in Dev, QA, and Production environments using Ansible and Bash.</li>
+                        <li>Experience with Cloud/Container tools: Kubernetes, Docker, Rancher, Harbor, AWS, Azure.</li>
+                        <li>Managed WebLogic Domains, Clusters, load-balancing, and fail-over solutions.</li>
                     </ul>
                 </div>
 
@@ -363,10 +386,10 @@
                     </div>
                     <span class="timeline-date">Feb 2019 - Dec 2020</span>
                     <ul class="description">
-                        <li>Monitored and administered the Control-M automation tool and Linux/UNIX operating systems.</li>
-                        <li>Managed user accounts, permissions, web servers, and file servers.</li>
-                        <li>Drove bridge calls and change control board meetings for production/QA deployments.</li>
-                        <li>Troubleshot system and application issues, including boot processes and log analysis.</li>
+                        <li>Monitored and administered Control-M automation tool and Linux/UNIX systems.</li>
+                        <li>Managed user accounts, permissions, Web servers, file servers, and firewalls.</li>
+                        <li>Drove Bridge calls and Change Control Board meetings for production/QA deployments.</li>
+                        <li>Performed system and application troubleshooting, log analysis, and stack trace debugging.</li>
                     </ul>
                 </div>
             </section>
@@ -382,10 +405,10 @@
                         <h3>Process Improvement & Automation</h3>
                     </div>
                     <ul class="description">
-                        <li>Reduced Jenkins deployment failures in Windows server using PowerShell scripts to log off user sessions.</li>
-                        <li>Automated Linux server disk space management using Bash scripting, Ansible, and Jenkins pipelines.</li>
-                        <li>Automated JAR, WAR, and EAR file deployments in WebLogic using WLST, Bash, and Python.</li>
                         <li>Improved database connectivity failures in WebLogic by automating JDBC connection pool resets.</li>
+                        <li>Reduced Jenkins deployment failures in Windows server using PowerShell scripts.</li>
+                        <li>Automated Linux server Disk space management using Bash, Ansible, and Jenkins.</li>
+                        <li>Automated JAR, WAR, and EAR deployments in WebLogic using WLST, Bash, and Python.</li>
                     </ul>
                 </div>
             </section>

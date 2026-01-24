@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Charan Kumar BS - Detailed CV</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #2563eb;       /* Modern Blue */
+            --sidebar-bg: #1e293b;    /* Dark Slate */
+            --sidebar-text: #f8fafc;  /* Off-white */
+            --body-bg: #f1f5f9;       /* Light Gray background */
+            --text-dark: #334155;     /* Dark text */
+            --text-light: #64748b;    /* Muted text */
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--body-bg);
+            margin: 0;
+            padding: 40px 0;
+            color: var(--text-dark);
+        }
+
+        .resume-container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            width: 100%;
+            max-width: 1000px;
+            min-height: 1100px;
+            background: white;
+            margin: 0 auto;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .sidebar {
+            background-color: var(--sidebar-bg);
+            color: var(--sidebar-text);
+            padding: 40px 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .profile-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: #334155;
+            margin: 0 auto 20px;
+            background-size: cover;
+            background-position: center;
+            border: 4px solid rgba(255,255,255,0.1);
+        }
+
+        .sidebar h2 {
+            font-size: 1.1em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            color: #93c5fd;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+            word-break: break-all;
+        }
+
+        .contact-item i {
+            width: 20px;
+            color: #60a5fa;
+        }
+
+        .contact-item a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .skill-list div {
+            margin-bottom: 15px;
+        }
+        
+        .skill-category {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 5px;
+            color: #bfdbfe;
+        }
+        
+        .skill-items {
+            font-size: 0.85em;
+            color: #cbd5e1;
+            line-height: 1.4;
+        }
+
+        .main-content {
+            padding: 50px 50px;
+        }
+
+        .header {
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin: 0;
+            color: #0f172a;
+            line-height: 1;
+        }
+
+        .header .role {
+            font-size: 1.2em;
+            color: var(--primary);
+            font-weight: 600;
+            margin-top: 10px;
+            display: block;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 1.3em;
+            color: #0f172a;
+            margin-bottom: 25px;
+            font-weight: 700;
+        }
+
+        .section-title i {
+            color: var(--primary);
+            background: #eff6ff;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.8em;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 30px;
+            border-left: 2px solid #e2e8f0;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -6px;
+            top: 5px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--primary);
+            border: 2px solid white;
+        }
+
+        .timeline-header h3 {
+            margin: 0;
+            font-size: 1.1em;
+            color: #1e293b;
+        }
+
+        .timeline-header .company {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .timeline-date {
+            font-size: 0.85em;
+            color: var(--text-light);
+            margin-top: 4px;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .description {
+            font-size: 0.95em;
+            color: #475569;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .description li {
+            margin-bottom: 8px;
+        }
+
+        .fab-print {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--primary);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 20px rgba(37, 99, 235, 0.4);
+            cursor: pointer;
+            border: none;
+            transition: transform 0.2s;
+            z-index: 100;
+        }
+        .fab-print:hover { transform: scale(1.1); }
+
+        .nav-buttons {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+        .btn-nav {
+            background: var(--primary);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 0.85em;
+            font-weight: 600;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: background 0.2s;
+        }
+        .btn-nav:hover { background: #1d4ed8; }
+
+        @media (max-width: 768px) {
+            .resume-container {
+                grid-template-columns: 1fr;
+                width: 95%;
+                margin: 20px auto;
+            }
+            .sidebar { padding: 30px; text-align: center; }
+            .contact-item { justify-content: center; }
+            .main-content { padding: 30px; }
+            .header { text-align: center; }
+            .timeline-item { padding-left: 0; border: none; }
+            .timeline-item::before { display: none; }
+            .nav-buttons { position: static; text-align: center; margin-bottom: 20px; display: block; }
+        }
+
+        @media print {
+            body { padding: 0; background: white; }
+            .resume-container { 
+                box-shadow: none; 
+                margin: 0; 
+                width: 100%; 
+                max-width: 100%;
+                grid-template-columns: 280px 1fr;
+            }
+            .fab-print, .nav-buttons { display: none; }
+            a { text-decoration: none; color: inherit; }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="fab-print" onclick="window.print()" title="Download PDF">
+        <i class="fa-solid fa-file-arrow-down"></i>
+    </button>
+
+    <div class="resume-container">
+        <div class="nav-buttons">
+            <a href="index.html" class="btn-nav"><i class="fa-solid fa-arrow-left"></i> View Concise Resume</a>
+        </div>
+        
+        <aside class="sidebar">
+            <div class="profile-photo"></div>
+            
+            <section>
+                <h2>Contact</h2>
+                <div class="contact-item">
+                    <i class="fa-solid fa-envelope"></i>
+                    <a href="mailto:charankumar971@hotmail.com">charankumar971@hotmail.com</a>
+                </div>
+                <div class="contact-item">
+                    <i class="fa-solid fa-phone"></i>
+                    <span>+91-9739900535</span>
+                </div>
+                <div class="contact-item">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <span>Whitefield, Bangalore</span>
+                </div>
+                <div class="contact-item" style="font-size: 0.8em; color: #94a3b8; margin-left: 35px; margin-top: -10px;">
+                    201, SLV Arcade, 560066
+                </div>
+            </section>
+
+            <section>
+                <h2>Technical Skills</h2>
+                <div class="skill-list">
+                    <div>
+                        <span class="skill-category">Middleware</span>
+                        <span class="skill-items">Oracle WebLogic, Coherence, OSB, OAOSB, JDBC, JMS, Log4J</span>
+                    </div>
+                    <div>
+                        <span class="skill-category">Scripting</span>
+                        <span class="skill-items">WLST, Python, Bash Shell, PowerShell, Kubectl</span>
+                    </div>
+                    <div>
+                        <span class="skill-category">Build & CI Tools</span>
+                        <span class="skill-items">Git, Jenkins, Rancher, Harbor, Ansible</span>
+                    </div>
+                    <div>
+                        <span class="skill-category">Data Movement</span>
+                        <span class="skill-items">SQL, Kafka, Redis Caches, ETL (Informatica)</span>
+                    </div>
+                    <div>
+                        <span class="skill-category">Reporting Tools</span>
+                        <span class="skill-items">SAP BOXI, Documentum, Adobe LiveCycle</span>
+                    </div>
+                    <div>
+                        <span class="skill-category">MFA/SSO</span>
+                        <span class="skill-items">Active Directory, CA (Arcot, SiteMinder)</span>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>Education</h2>
+                <div style="font-size: 0.9em; line-height: 1.5;">
+                    <p>• BE in Mechanical Eng.<br><span style="color: #94a3b8; font-size: 0.9em;">DBIT College (2014-2017)</span></p>
+                    <p>• Diploma in Mechanical<br><span style="color: #94a3b8; font-size: 0.9em;">GPTR (2011-2014)</span></p>
+                </div>
+            </section>
+        </aside>
+
+        <main class="main-content">
+            <div class="header">
+                <h1>Charan Kumar BS</h1>
+                <span class="role">Middleware Admin/DevOps Engineer</span>
+            </div>
+
+            <section>
+                <div class="section-title">
+                    <i class="fa-solid fa-user"></i>
+                    Career Objective
+                </div>
+                <p style="color: #475569; line-height: 1.6;">
+                    Seeking a challenging career opportunity as a DevOps Engineer where my knowledge and experience can be shared and enriched.
+                </p>
+            </section>
+
+            <section>
+                <div class="section-title">
+                    <i class="fa-solid fa-briefcase"></i>
+                    Professional Experience
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-header">
+                        <h3>Middleware Admin/DevOps Engineer</h3>
+                        <span class="company">TCS</span>
+                    </div>
+                    <span class="timeline-date">Dec 2020 - Present</span>
+                    <ul class="description">
+                        <li>Over 3 Years of progressive, professional experience in Middleware and DevOps which includes Build setup, Continuous Integration, and Source Code Management process setup.</li>
+                        <li>Configured Continuous Integration (CI) tools Jenkins from scratch and managed Jenkins Plugins, created slave nodes, and created build and deployment jobs.</li>
+                        <li>Hosting and maintaining GIT, Jenkins and Ansible, and Debugging issues if there is any failure in broken Jenkins build and maintaining.</li>
+                        <li>Automating the application deployment in Dev, QA, and Production environments.</li>
+                        <li>Experience in using source code management tool GIT.</li>
+                        <li>Experience in using cloud-based applications like Kubernetes, Docker, Rancher and Harbor.</li>
+                        <li>Experienced in large production environments using configuration management tools like Ansible.</li>
+                        <li>Wrote playbooks, Modules and utilized community Playbooks as well.</li>
+                        <li>Good working experience in Linux environment.</li>
+                        <li>Wrote Bash scripts for automating daily tasks and Linux administrates.</li>
+                        <li>Configuring Clusters, load-balancing and fail-over solutions and Web Server plug-in for Web Logic application server.</li>
+                        <li>Worked with Service now which includes incident management, requests and tasks.</li>
+                        <li>Having exposure to cloud computing (Azure, AWS) and virtualization (VMware).</li>
+                    </ul>
+                    
+                    <div style="margin-top: 15px;">
+                        <h4 style="font-size: 1em; color: #334155; margin-bottom: 10px;">Roles and Responsibilities</h4>
+                        <ul class="description">
+                            <li>Involved in creating the company's DevOps strategy in a large environment of Linux.</li>
+                            <li>Resolved conflicts related to merging of source code.</li>
+                            <li>Managing and resolving issues in WebLogic Domain and keeping domain health is good throughout business hours.</li>
+                            <li>Installing and configuring Jenkins, installing a plug-in, configuring security.</li>
+                            <li>Creating a Jenkins master and slave for the implementation of multiple parallel builds.</li>
+                            <li>Creating Jenkins builds jobs based on the requirement.</li>
+                            <li>Deploying the generated artefacts using Ansible.</li>
+                            <li>Automating the process of Server configuration through Ansible Playbooks.</li>
+                            <li>Designed Ansible Modules to manage configurations and automate the installation process.</li>
+                            <li>Responsible for creating jobs in Jenkins and monitoring daily operations in Jenkins.</li>
+                            <li>Scheduled Build jobs, configured build pipeline and automated deployment using Jenkins.</li>
+                            <li>Implemented the setup for Master slave architecture to improve the Performance of Jenkins, and implemented parallel builds.</li>
+                            <li>Interacting with developers to sort out issues related to Build Automation.</li>
+                            <li>Communicate effectively with the Clients in the weekly status calls and other meetings.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-header">
+                        <h3>Linux Admin/Control-M Admin</h3>
+                        <span class="company">TCS</span>
+                    </div>
+                    <span class="timeline-date">Feb 2019 - Dec 2020</span>
+                    <ul class="description">
+                        <li>Monitor and administrate the Control-M automation tool.</li>
+                        <li>Running SQL queries on sql management console.</li>
+                        <li>Driving Bridge calls with application owners, Clients on daily and weekly basis.</li>
+                        <li>Driving change control board meeting with app owners on weekly basis for production/QA deployments.</li>
+                        <li>Participated in team activities as a member of the Linux / UNIX System Administration.</li>
+                        <li>Set up and administer user and groups accounts, setting permissions, Web servers, file servers, firewalls, and directory services with ability to diagnose basic Apache Issues.</li>
+                        <li>Build and installed multiple Linux machines.</li>
+                        <li>System and Application troubleshooting and other related issues.</li>
+                        <li>Provided management of system process in areas like boot process, startup and system shutdown.</li>
+                        <li>Install, configure, maintain and administer Linux / UNIX operating systems and components.</li>
+                        <li>Planned and executed packages and updates installations necessary for optimal system performance.</li>
+                        <li>Debugging application logs and sending stack traces to the application team and enabling configuration is a day-to-day activity.</li>
+                        <li>User account management and administration Troubleshooting User's login & home directory-related issues, resetting passwords and unlocking user accounts in Active Directory.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section>
+                <div class="section-title">
+                    <i class="fa-solid fa-list-check"></i>
+                    Process Management
+                </div>
+                <ul class="description" style="margin-left: 15px;">
+                    <li>To make sure all Critical and Major Incidents are addressed within SLA response and sending out the Critical Alerts for such Incidents.</li>
+                    <li>Ensured to be able to successfully bring down the MTTR (Mean time to resolve) for all categories of incidents.</li>
+                    <li>To manage and support all service incidents either personally or via the Service Desk, through to successful completion and user satisfaction.</li>
+                    <li>To regularly review, performance and trends in response to incidents and to provide recommendations to the Service Manager for service improvement.</li>
+                    <li>Effective and rapid response to Major Incidents, also chair all Major incident meetings & technical Bridges further develop and maintain the incident management process.</li>
+                    <li>Produce metrics for service performance and customer satisfaction both on a regular and an ad hoc basis.</li>
+                    <li>Participate in the escalation process, involving senior delivery team.</li>
+                </ul>
+            </section>
+
+            <section>
+                <div class="section-title">
+                    <i class="fa-solid fa-trophy"></i>
+                    Achievements
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-header">
+                        <h3>Process Improvement</h3>
+                    </div>
+                    <ul class="description">
+                        <li>Improved database connectivity failures in WebLogic and automate reset JDBC connection pool.</li>
+                        <li>Reduce Jenkins deployments failure in windows server using PowerShell script by logoff all the user sessions.</li>
+                    </ul>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-header">
+                        <h3>Automation</h3>
+                    </div>
+                    <ul class="description">
+                        <li>Automate the Linux server Disk space management using bash scripting, Ansible and Jenkins pipelines.</li>
+                        <li>Automate the JAR, WAR and EAR file deployments in the WebLogic application server using WLST, Bash and Python.</li>
+                    </ul>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+</body>
+</html>
