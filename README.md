@@ -145,15 +145,15 @@ flowchart LR
   - Handles certificate renewal before expiration
 - **HTTP → HTTPS Redirect:** All unencrypted traffic is redirected to secure HTTPS
 
-### 3. Cloudflare DNS & Security (Optional Tunnel Alternative)
-You can optionally use **Cloudflare Tunnel** instead of manual port forwarding:
+### 3. Cloudflare DNS & Security (Tunnel)
+I use **Cloudflare Tunnel** instead of manual port forwarding:
 
 | Method | Pros | Cons |
 |--------|------|------|
 | **DDNS + Port Forward** (Current) | Full control, Lower latency, Self-hosted | Manual port setup, ISP may block ports, Dynamic IP updates needed |
 | **Cloudflare Tunnel** | No port forwarding needed, NAT bypass, Zero Trust Security | Added latency, Cloudflare dependency, Slower for local users |
 
-**Current Setup:** Uses DDNS + Port Forward (443) → More performant for home network access
+**Current Setup:** Uses DDNS + Cloudflare Tunnel + Let's Encrypt (certificate) & HTTPS (Traefik) (443) → More performant for home network access
 
 ## 🛠️ Hardware & Software Stack
 
