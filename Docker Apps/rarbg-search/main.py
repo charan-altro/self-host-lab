@@ -13,9 +13,11 @@ security = HTTPBasic()
 # Register urlencode filter for templates
 templates.env.filters["urlencode"] = lambda s: urllib.parse.quote_plus(str(s))
 
+import os
+
 # --- CONFIGURATION ---
-# USER_NAME = "suggest moving credentials to environment variables or a secrets management service."
-#USER_PASS = "suggest moving credentials to environment variables or a secrets management service.
+USER_NAME = os.environ.get("RARBG_USERNAME", "admin")
+USER_PASS = os.environ.get("RARBG_PASSWORD", "secret")
 
 def get_current_user(credentials: HTTPBasicCredentials = Depends(security)):
     is_correct_username = secrets.compare_digest(credentials.username, USER_NAME)

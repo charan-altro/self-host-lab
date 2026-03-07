@@ -8,8 +8,6 @@ services:
     networks:
       - monitoring
       - frontend
-    ports:
-      - "19999:19999"  # Direct access fallback
     volumes:
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
@@ -42,8 +40,6 @@ services:
     networks:
       - monitoring
       - frontend
-    ports:
-      - "8090:8090"  # OFFICIAL PORT [attached_file:1]
     volumes:
       - ./beszel_data:/beszel_data
       - ./beszel_socket:/beszel_socket
@@ -65,8 +61,8 @@ services:
     environment:
       - LISTEN=/beszel_socket/beszel.sock
       - HUB_URL=http://beszel:8090
-      - TOKEN=\${BEZSEL_TOKEN}      # ← From .env
-      - KEY=\${BEZSEL_KEY}          # ← From .env
+      - TOKEN=${BEZSEL_TOKEN}      # ← From .env
+      - KEY=${BEZSEL_KEY}          # ← From .env
     depends_on:
       - beszel
     restart: unless-stopped
