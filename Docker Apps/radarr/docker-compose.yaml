@@ -1,0 +1,37 @@
+# ─── Radarr — Raspberry Pi 4B ─────────────────────────────────────────
+# Access:
+#   Local LAN    → http://<PI-LAN-IP>:7878
+#   Tailscale    → http://<PI-TAILSCALE-IP>:7878  (if Tailscale on host)
+#   Public HTTPS → https://radarr.jedarabale.space  (via Traefik)
+
+services:
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+    volumes:
+      - /mnt/hgst-1tb/radarr_config:/config
+      # Mount the parent drive to /data so Radarr can access media:
+      # /data/MEDIA/Movies
+      - /mnt/hgst-1tb:/data
+      # Mount torrents path
+      - /mnt/hgst-1tbtorrents:/downloads
+    ports:
+      - "7878:7878"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.radarr-https.rule=Host(`radarr.jedarabale.space`)"
+      - "traefik.http.routers.radarr-https.entrypoints=websecure"
+      - "traefik.http.routers.radarr-https.service=radarr"
+      - "traefik.http.routers.radarr-https.tls.certresolver=cloudflare"
+      - "traefik.http.services.radarr.loadbalancer.server.port=7878"
+    networks:
+      - frontend
+    restart: unless-stopped
+
+networks:
+  frontend:
+    external: true

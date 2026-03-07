@@ -1,14 +1,53 @@
+# ─── Jellyfin — Raspberry Pi 4B (8GB) ─────────────────────────────────────────
+# Access:
+#   Local LAN    → http://<PI-LAN-IP>:8096
+#   Tailscale    → http://<PI-TAILSCALE-IP>:8096  (if Tailscale on host)
+#   Public HTTPS → https://jellypin.jedarabale.space  (via Traefik)
+
 services:
   jellyfin:
     image: jellyfin/jellyfin:latest
     container_name: jellyfin
+
+    # REMOVED: privileged: true  → not needed, devices: block handles GPU access
+    # REMOVED: dns block          → not needed, causes internal DNS issues
+
+    ports:
+      - "8096:8096" # LAN + Tailscale direct access
+
+    devices:
+      - /dev/vchiq:/dev/vchiq # VC GPU (keep — needed for some Pi GPU paths)
+      - /dev/video10:/dev/video10 # V4L2 H264 encoder
+      - /dev/video11:/dev/video11 # V4L2 H264 decoder
+      - /dev/video12:/dev/video12 # V4L2 HEVC decoder
+
     volumes:
-      - /srv/jellyfin/config:/config
-      - /srv/jellyfin/cache:/cache
-      - /mnt/raksha:/media
+      # Config — on external drive (good, keep)
+      - /mnt/hgst-1tb/jellyfin_config:/config
+
+      # Cache RAM disk — protects storage from metadata/image cache writes
+      - type: tmpfs
+        target: /cache
+        tmpfs:
+          size: 2048M # 2GB for cache (minimum required by new Jellyfin versions)
+
+      # Transcode RAM disk — NEW, protects storage from transcode chunk writes
+      - type: tmpfs
+        target: /transcode
+        tmpfs:
+          size: 2048M # 2GB for active transcoding sessions
+
+      # Media — mount specific subdirs to keep the container view clean
+      # Adjust these paths to match your actual folder structure on /mnt/hgst-1tb
+      - /mnt/hgst-1tb/MEDIA/Movies:/media/movies:ro
+      - /mnt/hgst-1tb/MEDIA/TVShows:/media/tv:ro
+      - /mnt/hgst-1tb/MEDIA/Music:/media/music:ro
+
     environment:
-      - PUID=${PUID:-1000}
-      - PGID=${PGID:-1000}
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata # ADD: set your timezone
+
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.jellyfin-https.rule=Host(`jellypin.jedarabale.space`)"
@@ -16,15 +55,12 @@ services:
       - "traefik.http.routers.jellyfin-https.service=jellyfin"
       - "traefik.http.routers.jellyfin-https.tls.certresolver=cloudflare"
       - "traefik.http.services.jellyfin.loadbalancer.server.port=8096"
+      # Optional: add middleware for security headers via Traefik if you have one configured
+
     networks:
       - frontend
+
     restart: unless-stopped
-    deploy:
-      resources:
-        limits:
-          memory: 2G
-        reservations:
-          memory: 512M
 
 networks:
   frontend:
