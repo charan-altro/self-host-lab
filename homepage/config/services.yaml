@@ -1,0 +1,192 @@
+---
+# ==========================================
+# PAGE 1: REMOTE TAB
+# ==========================================
+
+- 🎬 Remote Media:
+    - Jellyfin:
+        icon: jellyfin.png
+        href: https://jellyfin.jedarabale.space
+        description: Media Server
+    - Seerr:
+        icon: overseerr.png
+        href: https://seerr.jedarabale.space
+        description: Media Requests
+
+- 🤖 Remote Automation:
+    - Sonarr:
+        icon: sonarr.png
+        href: https://sonarr.jedarabale.space
+        description: TV Shows
+    - Radarr:
+        icon: radarr.png
+        href: https://radarr.jedarabale.space
+        description: Movies
+    - Lidarr:
+        icon: lidarr.png
+        href: https://lidarr.jedarabale.space
+        description: Music
+    - Whisparr:
+        icon: whisparr.png
+        href: https://whisparr.jedarabale.space
+        description: Adult Media
+    - Prowlarr:
+        icon: prowlarr.png
+        href: https://prowlarr.jedarabale.space
+        description: Indexer Manager
+    - qBittorrent:
+        icon: qbittorrent.png
+        href: https://qbit.jedarabale.space
+        description: Torrent Client
+
+- ⚙️ Remote System:
+    - Portainer:
+        icon: portainer.png
+        href: https://portainer.jedarabale.space
+        description: Docker Management
+    - Pi-hole:
+        icon: pi-hole.png
+        href: https://adblock.jedarabale.space/admin
+        description: Network AdBlock
+    - Netdata:
+        icon: netdata.png
+        href: https://netdata.jedarabale.space
+        description: Server Metrics
+    - Beszel:
+        icon: beszel.png
+        href: https://beszel.jedarabale.space
+        description: Server Monitoring
+
+
+# ==========================================
+# PAGE 2: LOCAL TAB
+# ==========================================
+
+- 🎬 Local Media:
+    - Jellyfin (Local):
+        icon: jellyfin.png
+        href: http://192.168.1.9:8096
+        server: my-pi-docker
+        container: jellyfin
+        widget:
+            type: jellyfin
+            url: http://192.168.1.9:8096
+            key: bbc461a1a4304d4d9392346773706ec9
+            enableBlocks: true
+            enableNowPlaying: true
+    - Seerr (Local):
+        icon: overseerr.png
+        href: http://192.168.1.9:5055
+        server: my-pi-docker
+        container: seerr
+        widget:
+            type: overseerr
+            url: http://192.168.1.9:5055
+            key: MTc3MzIyNzM0Nzg2OTZjZjQ1YmQ2LWM0NmEtNDA4MS1hMWM2LTg2OTU1NjU4NjM5Zg==
+
+- 🤖 Local Automation:
+    - Sonarr (Local):
+        icon: sonarr.png
+        href: http://192.168.1.9:8989
+        server: my-pi-docker
+        container: sonarr
+        widget:
+            type: sonarr
+            url: http://192.168.1.9:8989
+            key: 3b991d2f7bb84c618ef8cd1ef8f34fee
+    - Radarr (Local):
+        icon: radarr.png
+        href: http://192.168.1.9:7878
+        server: my-pi-docker
+        container: radarr
+        widget:
+            type: radarr
+            url: http://192.168.1.9:7878
+            key: 084df558321e44c78c63caef6b3ec78c
+    - Lidarr (Local):
+        icon: lidarr.png
+        href: http://192.168.1.9:8686
+        server: my-pi-docker
+        container: lidarr
+        widget:
+            type: lidarr
+            url: http://192.168.1.9:8686
+            key: 0648a256134e4776a496fd1b24824a12
+    - Whisparr (Local):
+        icon: whisparr.png
+        href: http://192.168.1.9:6969
+        server: my-pi-docker
+        container: whisparr
+        widget:
+            type: whisparr
+            url: http://192.168.1.9:6969
+            key: 536c416ff7cc4906807f0bb6042f9553
+    - Prowlarr (Local):
+        icon: prowlarr.png
+        href: http://192.168.1.9:9696
+        server: my-pi-docker
+        container: prowlarr
+        widget:
+            type: prowlarr
+            url: http://192.168.1.9:9696
+            key: 4c49502c72694eef92dac17abb1a3bcc
+    - qBittorrent (Local):
+        icon: qbittorrent.png
+        href: http://192.168.1.9:8123
+        server: my-pi-docker
+        container: qbittorrent
+        widget:
+            type: qbittorrent
+            url: http://192.168.1.9:8123
+            username: "admin"
+            password: "Tcstvm@feb21"
+
+- ⚙️ Local System:
+    - Portainer (Local):
+        icon: portainer.png
+        href: http://192.168.1.9:9000
+        server: my-pi-docker
+        container: portainer
+        widget:
+            type: portainer
+            url: http://192.168.1.9:9000
+            env: 3 
+            key: ptr_VsBs5+I23XFp6Xpa70MGAIiuAXtplF/fN13lN9ddDoU=
+    - Pi-hole (Local):
+        icon: pi-hole.png
+        href: http://192.168.1.9:8080/admin
+        server: my-pi-docker
+        container: pihole
+        widget:
+            type: pihole
+            url: http://192.168.1.9:8080 
+            key: f9qeEuwndeKhT2grVHqZFErMqS8gWmTPMpe4RfcaUD0=
+            version: 6
+    - Netdata (Local):
+        icon: netdata.png
+        href: http://192.168.1.9:19999
+        server: my-pi-docker
+        container: netdata
+        widget:
+            type: netdata
+            url: http://192.168.1.9:19999
+    - Beszel (Local):
+        icon: beszel.png
+        href: http://192.168.1.9:8090
+        server: my-pi-docker
+        container: beszel
+    - FileBrowser (Local):
+        icon: files.png
+        href: http://192.168.1.9:8001
+        server: my-pi-docker
+        container: filebrowser
+    - Maintainerr (Local):
+        icon: maintainerr.png
+        href: http://192.168.1.9:6246
+        server: my-pi-docker
+        container: maintainerr
+    - Flaresolverr (Local):
+        icon: flaresolverr.png
+        href: http://192.168.1.9:8191
+        server: my-pi-docker
+        container: flaresolverr

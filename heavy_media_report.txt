@@ -1,0 +1,85 @@
+--- MEDIA ANALYSIS REPORT (LIVE MOVE CORRUPT) ---
+
+[ERROR] /mnt/hgst-1tb/MEDIA/Movies/Hollywood/Kids/Bommarillu (2006)/Bommarillu (2006).avi: Probing Error or Timeout (Corrupt?)
+        MOVED to Corrupt Folder: /mnt/hgst-1tb/MEDIA/Corrupt_Media/Hollywood/Kids/Bommarillu (2006)/Bommarillu (2006).avi
+[ERROR] /mnt/hgst-1tb/MEDIA/Movies/Hollywood/Normal/Amma Nanna O Tamil Ammai అమ్మ నాన్న ఓ తమిళమ్మాయి Ravi Teja Asin With English Subtitles/Amma Nanna O Tamil Ammai అమ్మ నాన్న ఓ తమిళమ్మాయి Ravi Teja Asin With English Subtitles.mp4: Probing Error or Timeout (Corrupt?)
+        MOVED to Corrupt Folder: /mnt/hgst-1tb/MEDIA/Corrupt_Media/Hollywood/Normal/Amma Nanna O Tamil Ammai అమ్మ నాన్న ఓ తమిళమ్మాయి Ravi Teja Asin With English Subtitles/Amma Nanna O Tamil Ammai అమ్మ నాన్న ఓ తమిళమ్మాయి Ravi Teja Asin With English Subtitles.mp4
+[ERROR] /mnt/hgst-1tb/MEDIA/Movies/Hollywood/Normal/Anand Full Movie/Anand Full Movie.mp4: Probing Error or Timeout (Corrupt?)
+        MOVED to Corrupt Folder: /mnt/hgst-1tb/MEDIA/Corrupt_Media/Hollywood/Normal/Anand Full Movie/Anand Full Movie.mp4
+[ERROR] /mnt/hgst-1tb/MEDIA/Movies/Hollywood/Normal/ARJTE2017RIPOT13/ARJTE2017RIPOT13.mp4: Probing Error or Timeout (Corrupt?)
+        MOVED to Corrupt Folder: /mnt/hgst-1tb/MEDIA/Corrupt_Media/Hollywood/Normal/ARJTE2017RIPOT13/ARJTE2017RIPOT13.mp4
+[ERROR] /mnt/hgst-1tb/MEDIA/Movies/Hollywood/Normal/Bahadhur Kannada (2014) AC3/Bahadhur Kannada (2014) AC3.mp4: No Video Stream Found (Possibly Corrupt)
+        MOVED to Corrupt Folder: /mnt/hgst-1tb/MEDIA/Corrupt_Media/Hollywood/Normal/Bahadhur Kannada (2014) AC3/Bahadhur Kannada (2014) AC3.mp4
+[ERROR] /mnt/hgst-1tb/MEDIA/Movies/Hollywood/Normal/Bahubaali (2015) AC3/Bahubaali (2015) AC3.mkv: No Video Stream Found (Possibly Corrupt)
+        MOVED to Corrupt Folder: /mnt/hgst-1tb/MEDIA/Corrupt_Media/Hollywood/Normal/Bahubaali (2015) AC3/Bahubaali (2015) AC3.mkv
+[ERROR] /mnt/hgst-1tb/MEDIA/Movies/Hollywood/Normal/Bhaktha Prahlada (1967)/Bhaktha Prahlada (1967).mp4: Probing Error or Timeout (Corrupt?)
+        MOVED to Corrupt Folder: /mnt/hgst-1tb/MEDIA/Corrupt_Media/Hollywood/Normal/Bhaktha Prahlada (1967)/Bhaktha Prahlada (1967).mp4
+[ERROR] /mnt/hgst-1tb/MEDIA/Movies/Hollywood/Normal/Sampathige Saval Kannada Full Length Movie Dr Rajkumar Manjula AC3/Sampathige Saval Kannada Full Length Movie Dr Rajkumar Manjula AC3.mp4: No Video Stream Found (Possibly Corrupt)
+        MOVED to Corrupt Folder: /mnt/hgst-1tb/MEDIA/Corrupt_Media/Hollywood/Normal/Sampathige Saval Kannada Full Length Movie Dr Rajkumar Manjula AC3/Sampathige Saval Kannada Full Length Movie Dr Rajkumar Manjula AC3.mp4
+[ERROR] /mnt/hgst-1tb/MEDIA/Movies/Hollywood/Normal/Sankranti Full Movie/Sankranti Full Movie.mp4: Probing Error or Timeout (Corrupt?)
+        MOVED to Corrupt Folder: /mnt/hgst-1tb/MEDIA/Corrupt_Media/Hollywood/Normal/Sankranti Full Movie/Sankranti Full Movie.mp4
+[ERROR] /mnt/hgst-1tb/MEDIA/Movies/Hollywood/Normal/Santosham Full Movie AC3/Santosham Full Movie AC3.mp4: No Video Stream Found (Possibly Corrupt)
+        MOVED to Corrupt Folder: /mnt/hgst-1tb/MEDIA/Corrupt_Media/Hollywood/Normal/Santosham Full Movie AC3/Santosham Full Movie AC3.mp4
+[ERROR] /mnt/hgst-1tb/MEDIA/Movies/Hollywood/Normal/Nuvvu Leka Nenu Lenu (2002)/Nuvvu Leka Nenu Lenu (2002).mp4: Probing Error or Timeout (Corrupt?)
+        MOVED to Corrupt Folder: /mnt/hgst-1tb/MEDIA/Corrupt_Media/Hollywood/Normal/Nuvvu Leka Nenu Lenu (2002)/Nuvvu Leka Nenu Lenu (2002).mp4
+[ERROR] /mnt/hgst-1tb/MEDIA/Movies/Hollywood/Normal/Pawan Kalyan Tholiprema movie full/Pawan Kalyan Tholiprema movie full.MP4: Probing Error or Timeout (Corrupt?)
+        MOVED to Corrupt Folder: /mnt/hgst-1tb/MEDIA/Corrupt_Media/Hollywood/Normal/Pawan Kalyan Tholiprema movie full/Pawan Kalyan Tholiprema movie full.MP4
+[ERROR] /mnt/hgst-1tb/MEDIA/Movies/Hollywood/Normal/Pizza పిజ్జా Full Movie Vijay Ramya Nambeesan With English Subtitles/Pizza పిజ్జా Full Movie Vijay Ramya Nambeesan With English Subtitles.mp4: Probing Error or Timeout (Corrupt?)
+        MOVED to Corrupt Folder: /mnt/hgst-1tb/MEDIA/Corrupt_Media/Hollywood/Normal/Pizza పిజ్జా Full Movie Vijay Ramya Nambeesan With English Subtitles/Pizza పిజ్జా Full Movie Vijay Ramya Nambeesan With English Subtitles.mp4
+[ERROR] /mnt/hgst-1tb/MEDIA/Movies/Hollywood/Normal/Raja Rani Telugu Full Length Movie Full/Raja Rani Telugu Full Length Movie Full.mp4: Probing Error or Timeout (Corrupt?)
+        MOVED to Corrupt Folder: /mnt/hgst-1tb/MEDIA/Corrupt_Media/Hollywood/Normal/Raja Rani Telugu Full Length Movie Full/Raja Rani Telugu Full Length Movie Full.mp4
+[ERROR] /mnt/hgst-1tb/MEDIA/Movies/Hollywood/Normal/Malli Malli Idi Rani Roju Full Movie/Malli Malli Idi Rani Roju Full Movie.mp4: Probing Error or Timeout (Corrupt?)
+        MOVED to Corrupt Folder: /mnt/hgst-1tb/MEDIA/Corrupt_Media/Hollywood/Normal/Malli Malli Idi Rani Roju Full Movie/Malli Malli Idi Rani Roju Full Movie.mp4
+[ERROR] /mnt/hgst-1tb/MEDIA/Movies/Hollywood/Normal/Malliswari (1951)/Malliswari (1951).mp4: Probing Error or Timeout (Corrupt?)
+        MOVED to Corrupt Folder: /mnt/hgst-1tb/MEDIA/Corrupt_Media/Hollywood/Normal/Malliswari (1951)/Malliswari (1951).mp4
+[ERROR] /mnt/hgst-1tb/MEDIA/Movies/Hollywood/Normal/Manasantha Nuvve Telugu Full Movie/Manasantha Nuvve Telugu Full Movie.mp4: Probing Error or Timeout (Corrupt?)
+        MOVED to Corrupt Folder: /mnt/hgst-1tb/MEDIA/Corrupt_Media/Hollywood/Normal/Manasantha Nuvve Telugu Full Movie/Manasantha Nuvve Telugu Full Movie.mp4
+[ERROR] /mnt/hgst-1tb/MEDIA/Movies/Hollywood/Normal/Jayam జయం సినిమా Telugu Full length Movie Nitin Sada AC3/Jayam జయం సినిమా Telugu Full length Movie Nitin Sada AC3.mp4: No Video Stream Found (Possibly Corrupt)
+        MOVED to Corrupt Folder: /mnt/hgst-1tb/MEDIA/Corrupt_Media/Hollywood/Normal/Jayam జయం సినిమా Telugu Full length Movie Nitin Sada AC3/Jayam జయం సినిమా Telugu Full length Movie Nitin Sada AC3.mp4
+[ERROR] /mnt/hgst-1tb/MEDIA/Movies/Hollywood/Normal/Kotha Bangaru Lokam (2008)/Kotha Bangaru Lokam (2008).mp4: Probing Error or Timeout (Corrupt?)
+        MOVED to Corrupt Folder: /mnt/hgst-1tb/MEDIA/Corrupt_Media/Hollywood/Normal/Kotha Bangaru Lokam (2008)/Kotha Bangaru Lokam (2008).mp4
+[ERROR] /mnt/hgst-1tb/MEDIA/Movies/Hollywood/Normal/Krishna Leela (2015)/Krishna Leela (2015).mkv: Probing Error or Timeout (Corrupt?)
+        MOVED to Corrupt Folder: /mnt/hgst-1tb/MEDIA/Corrupt_Media/Hollywood/Normal/Krishna Leela (2015)/Krishna Leela (2015).mkv
+[ERROR] /mnt/hgst-1tb/MEDIA/Movies/Hollywood/Normal/Kushi Telugu Full Movie Pawan Kalyan Bhumika Chawla/Kushi Telugu Full Movie Pawan Kalyan Bhumika Chawla.mp4: Probing Error or Timeout (Corrupt?)
+        MOVED to Corrupt Folder: /mnt/hgst-1tb/MEDIA/Corrupt_Media/Hollywood/Normal/Kushi Telugu Full Movie Pawan Kalyan Bhumika Chawla/Kushi Telugu Full Movie Pawan Kalyan Bhumika Chawla.mp4
+[ERROR] /mnt/hgst-1tb/MEDIA/Movies/Hollywood/Normal/Lava Kusa Full Length Telugu Movie NTR Anjali Devi Sobhan Babu MP3/Lava Kusa Full Length Telugu Movie NTR Anjali Devi Sobhan Babu MP3.mp4: Probing Error or Timeout (Corrupt?)
+        MOVED to Corrupt Folder: /mnt/hgst-1tb/MEDIA/Corrupt_Media/Hollywood/Normal/Lava Kusa Full Length Telugu Movie NTR Anjali Devi Sobhan Babu MP3/Lava Kusa Full Length Telugu Movie NTR Anjali Devi Sobhan Babu MP3.mp4
+[ERROR] /mnt/hgst-1tb/MEDIA/Movies/Hollywood/Normal/Ughram 1 MP3/Ughram 1 MP3.mp4: Probing Error or Timeout (Corrupt?)
+        MOVED to Corrupt Folder: /mnt/hgst-1tb/MEDIA/Corrupt_Media/Hollywood/Normal/Ughram 1 MP3/Ughram 1 MP3.mp4
+[ERROR] /mnt/hgst-1tb/MEDIA/Movies/Hollywood/Normal/Murari మురారి Full Length Telugu Movie Mahesh Babu Sonali Bendre/Murari మురారి Full Length Telugu Movie Mahesh Babu Sonali Bendre.mp4: Probing Error or Timeout (Corrupt?)
+        MOVED to Corrupt Folder: /mnt/hgst-1tb/MEDIA/Corrupt_Media/Hollywood/Normal/Murari మురారి Full Length Telugu Movie Mahesh Babu Sonali Bendre/Murari మురారి Full Length Telugu Movie Mahesh Babu Sonali Bendre.mp4
+[ERROR] /mnt/hgst-1tb/MEDIA/Movies/Hollywood/Normal/Daddy Telugu Full Movie Chiranjeevi Simran Rajendra Prasad/Daddy Telugu Full Movie Chiranjeevi Simran Rajendra Prasad.mp4: Probing Error or Timeout (Corrupt?)
+        MOVED to Corrupt Folder: /mnt/hgst-1tb/MEDIA/Corrupt_Media/Hollywood/Normal/Daddy Telugu Full Movie Chiranjeevi Simran Rajendra Prasad/Daddy Telugu Full Movie Chiranjeevi Simran Rajendra Prasad.mp4
+[ERROR] /mnt/hgst-1tb/MEDIA/Movies/Hollywood/Normal/Gaalipata (2008)/Gaalipata (2008).mp4: Probing Error or Timeout (Corrupt?)
+        MOVED to Corrupt Folder: /mnt/hgst-1tb/MEDIA/Corrupt_Media/Hollywood/Normal/Gaalipata (2008)/Gaalipata (2008).mp4
+[ERROR] /mnt/hgst-1tb/MEDIA/Movies/Hollywood/Normal/Navagraha (2008)/Navagraha (2008).mp4: Probing Error or Timeout (Corrupt?)
+        MOVED to Corrupt Folder: /mnt/hgst-1tb/MEDIA/Corrupt_Media/Hollywood/Normal/Navagraha (2008)/Navagraha (2008).mp4
+[ERROR] /mnt/hgst-1tb/MEDIA/Movies/Hollywood/Normal/Godavari Full Movie/Godavari Full Movie.mp4: Probing Error or Timeout (Corrupt?)
+        MOVED to Corrupt Folder: /mnt/hgst-1tb/MEDIA/Corrupt_Media/Hollywood/Normal/Godavari Full Movie/Godavari Full Movie.mp4
+[ERROR] /mnt/hgst-1tb/MEDIA/Movies/Hollywood/Normal/Happy Telugu Full Movie Allu Arjun Genelia D'Souza Geetha Arts/Happy Telugu Full Movie Allu Arjun Genelia D'Souza Geetha Arts.mp4: Probing Error or Timeout (Corrupt?)
+        MOVED to Corrupt Folder: /mnt/hgst-1tb/MEDIA/Corrupt_Media/Hollywood/Normal/Happy Telugu Full Movie Allu Arjun Genelia D'Souza Geetha Arts/Happy Telugu Full Movie Allu Arjun Genelia D'Souza Geetha Arts.mp4
+[ERROR] /mnt/hgst-1tb/MEDIA/Movies/Hollywood/Normal/Indra Full Movie AC3/Indra Full Movie AC3.mp4: No Video Stream Found (Possibly Corrupt)
+        MOVED to Corrupt Folder: /mnt/hgst-1tb/MEDIA/Corrupt_Media/Hollywood/Normal/Indra Full Movie AC3/Indra Full Movie AC3.mp4
+[ERROR] /mnt/hgst-1tb/MEDIA/Movies/Hollywood/Normal/Thaandavam (2012)/Thaandavam (2012).mkv: Probing Error or Timeout (Corrupt?)
+        MOVED to Corrupt Folder: /mnt/hgst-1tb/MEDIA/Corrupt_Media/Hollywood/Normal/Thaandavam (2012)/Thaandavam (2012).mkv
+[ERROR] /mnt/hgst-1tb/MEDIA/Movies/South_Indian/Kids/10 Endrathukulla (2015)/10 Endrathukulla (2015).mp4: Probing Error or Timeout (Corrupt?)
+        MOVED to Corrupt Folder: /mnt/hgst-1tb/MEDIA/Corrupt_Media/South_Indian/Kids/10 Endrathukulla (2015)/10 Endrathukulla (2015).mp4
+[ERROR] /mnt/hgst-1tb/MEDIA/Movies/South_Indian/Kids/Nuvvu Naaku Nachav (2001)/Nuvvu Naaku Nachav (2001).avi: Probing Error or Timeout (Corrupt?)
+        MOVED to Corrupt Folder: /mnt/hgst-1tb/MEDIA/Corrupt_Media/South_Indian/Kids/Nuvvu Naaku Nachav (2001)/Nuvvu Naaku Nachav (2001).avi
+[ERROR] /mnt/hgst-1tb/MEDIA/Movies/South_Indian/Kids/Simple Agi Ondh Love Story (2013)/Simple Agi Ondh Love Story (2013).mkv: Probing Error or Timeout (Corrupt?)
+        MOVED to Corrupt Folder: /mnt/hgst-1tb/MEDIA/Corrupt_Media/South_Indian/Kids/Simple Agi Ondh Love Story (2013)/Simple Agi Ondh Love Story (2013).mkv
+[ERROR] /mnt/hgst-1tb/MEDIA/Movies/South_Indian/Normal/Bhadra (2005)/Bhadra (2005).avi: Probing Error or Timeout (Corrupt?)
+        MOVED to Corrupt Folder: /mnt/hgst-1tb/MEDIA/Corrupt_Media/South_Indian/Normal/Bhadra (2005)/Bhadra (2005).avi
+[ERROR] /mnt/hgst-1tb/MEDIA/Movies/South_Indian/Normal/Jagadeka Veerudu Atiloka Sundari Full Length Telugu Movie  Chiranjeevi, Sridevi/Jagadeka Veerudu Atiloka Sundari Full Length Telugu Movie  Chiranjeevi, Sridevi.mp4: Probing Error or Timeout (Corrupt?)
+        MOVED to Corrupt Folder: /mnt/hgst-1tb/MEDIA/Corrupt_Media/South_Indian/Normal/Jagadeka Veerudu Atiloka Sundari Full Length Telugu Movie  Chiranjeevi, Sridevi/Jagadeka Veerudu Atiloka Sundari Full Length Telugu Movie  Chiranjeevi, Sridevi.mp4
+[ERROR] /mnt/hgst-1tb/MEDIA/Movies/South_Indian/Normal/K.G.F: Chapter 1 (2018)/K.G.F: Chapter 1 (2018).mkv: Probing Error or Timeout (Corrupt?)
+        MOVED to Corrupt Folder: /mnt/hgst-1tb/MEDIA/Corrupt_Media/South_Indian/Normal/K.G.F: Chapter 1 (2018)/K.G.F: Chapter 1 (2018).mkv
+[ERROR] /mnt/hgst-1tb/MEDIA/Movies/South_Indian/Normal/Mass Telugu Full Length Movie  Nagarjuna, Jyothika and Charmi/Mass Telugu Full Length Movie  Nagarjuna, Jyothika and Charmi.mp4: Probing Error or Timeout (Corrupt?)
+        MOVED to Corrupt Folder: /mnt/hgst-1tb/MEDIA/Corrupt_Media/South_Indian/Normal/Mass Telugu Full Length Movie  Nagarjuna, Jyothika and Charmi/Mass Telugu Full Length Movie  Nagarjuna, Jyothika and Charmi.mp4
+[ERROR] /mnt/hgst-1tb/MEDIA/Movies/South_Indian/Normal/Premam (2015) - 720p mHD - Blu-Ray - x264 - 5.1 AAC - Esubs [DDR]/Premam (2015) - 720p mHD - Blu-Ray - x264 - 5.1 AAC - Esubs [DDR].mkv: Probing Error or Timeout (Corrupt?)
+        MOVED to Corrupt Folder: /mnt/hgst-1tb/MEDIA/Corrupt_Media/South_Indian/Normal/Premam (2015) - 720p mHD - Blu-Ray - x264 - 5.1 AAC - Esubs [DDR]/Premam (2015) - 720p mHD - Blu-Ray - x264 - 5.1 AAC - Esubs [DDR].mkv
+
+Summary:
+Total files scanned: 397
+Heavy files identified: 0
+Corrupt/Error files identified: 39

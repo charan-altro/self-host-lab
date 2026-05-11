@@ -1,0 +1,41 @@
+services:
+
+  resume:
+
+    image: nginx:alpine
+
+    container_name: resume
+
+    volumes:
+
+      - ./:/usr/share/nginx/html:ro
+
+    # --- ADD THIS SECTION TEMPORARILY ---
+
+    ports:
+
+      - "8080:80"
+
+    # ------------------------------------
+
+    labels:
+
+      - "traefik.enable=true"
+
+      - "traefik.http.routers.resume.rule=Host(`resume.jedarabale.space`)"
+
+      - "traefik.http.routers.resume.entrypoints=websecure"
+
+      - "traefik.http.routers.resume.tls.certresolver=cloudflare"
+
+      - "traefik.http.services.resume.loadbalancer.server.port=80" # Nginx uses port 80 by networks:
+
+      - frontend
+
+    restart: unless-stopped
+
+networks:
+
+  frontend:
+
+    external: true

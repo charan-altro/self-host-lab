@@ -1,0 +1,36 @@
+# ─── Readarr — Raspberry Pi 4B ─────────────────────────────────────────
+# Access:
+#   Local LAN    → http://<PI-LAN-IP>:8787
+#   Public HTTPS → https://readarr.jedarabale.space  (via Traefik)
+#
+# Books root folder inside Readarr: /data/MEDIA/Books
+# Download folder inside Readarr:   /data/torrents
+
+services:
+  readarr:
+    image: lscr.io/linuxserver/readarr:develop
+    container_name: readarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+      - UMASK=002
+    volumes:
+      - /home/homeserver/app_configs/readarr_config:/config
+      - /mnt/fastmedia:/data
+    ports:
+      - "8787:8787"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.readarr-https.rule=Host(`readarr.jedarabale.space`)"
+      - "traefik.http.routers.readarr-https.entrypoints=websecure"
+      - "traefik.http.routers.readarr-https.service=readarr"
+      - "traefik.http.routers.readarr-https.tls.certresolver=cloudflare"
+      - "traefik.http.services.readarr.loadbalancer.server.port=8787"
+    networks:
+      - frontend
+    restart: unless-stopped
+
+networks:
+  frontend:
+    external: true

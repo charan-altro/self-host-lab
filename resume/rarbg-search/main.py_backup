@@ -1,0 +1,30 @@
+from fastapi import FastAPI, Request
+from fastapi.responses import HTMLResponse
+from fastapi.templating import Jinja2Templates
+import sqlite3
+
+app = FastAPI()
+templates = Jinja2Templates(directory="templates")
+
+def get_db_connection():
+    conn = sqlite3.connect('rarbg_db.sqlite')
+    conn.row_factory = sqlite3.Row
+    return conn
+
+@app.get("/", response_class=HTMLResponse)
+async def index(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
+
+@app.get("/search", response_class=HTMLResponse)
+async def search(request: Request, q: str):
+    conn = get_db_connection()
+    # SQL optimized for large tables: partial match on title
+    query = "SELECT title, hash, size, cat FROM items WHERE title LIKE ? LIMIT 100"
+    results = conn.execute(query, ('%' + q + '%',)).fetchall()
+    conn.close()
+    
+    return templates.TemplateResponse("index.html", {
+        "request": request, 
+        "results": results, 
+        "query": q
+    })

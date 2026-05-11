@@ -1,0 +1,17 @@
+{
+    "lidarr": {
+        "save_path": ""
+    },
+    "prowlarr": {
+        "save_path": ""
+    },
+    "radarr": {
+        "save_path": ""
+    },
+    "tv-sonarr": {
+        "save_path": ""
+    },
+    "tv-whisparr": {
+        "save_path": ""
+    }
+}

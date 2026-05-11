@@ -1,0 +1,31 @@
+services:
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+      - WEBUI_PORT=8123
+      - TORRENTING_PORT=6881
+    volumes:
+      - ./config:/config
+      - /mnt/raksha/torrents:/downloads
+    ports:
+      - 8123:8123
+      - 6881:6881
+      - 6881:6881/udp
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.qbittorrent-https.rule=Host(`qbittorrent.jedarabale`)"
+      - "traefik.http.routers.qbittorrent-https.entrypoints=websecure"
+      - "traefik.http.routers.qbittorrent-https.service=qbittorrent"
+      - "traefik.http.routers.qbittorrent-https.tls.certresolver=cloudflare"
+      - "traefik.http.services.qbittorrent.loadbalancer.server.port=8123"
+    networks:
+      - frontend
+    restart: unless-stopped
+
+networks:
+  frontend:
+    external: true

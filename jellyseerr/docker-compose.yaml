@@ -1,0 +1,31 @@
+# ─── Jellyseerr — Raspberry Pi 4B ─────────────────────────────────────────
+# Access:
+#   Local LAN    → http://<PI-LAN-IP>:5055
+#   Tailscale    → http://<PI-TAILSCALE-IP>:5055  (if Tailscale on host)
+#   Public HTTPS → https://requests.jedarabale.space  (via Traefik)
+
+services:
+  jellyseerr:
+    image: fallenbagel/jellyseerr:latest
+    container_name: jellyseerr
+    environment:
+      - LOG_LEVEL=debug
+      - TZ=Asia/Kolkata
+    ports:
+      - "5055:5055"
+    volumes:
+      - /home/homeserver/app_configs/jellyseerr_config:/app/config
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jellyseerr-https.rule=Host(`requests.jedarabale.space`)"
+      - "traefik.http.routers.jellyseerr-https.entrypoints=websecure"
+      - "traefik.http.routers.jellyseerr-https.service=jellyseerr"
+      - "traefik.http.routers.jellyseerr-https.tls.certresolver=cloudflare"
+      - "traefik.http.services.jellyseerr.loadbalancer.server.port=5055"
+    networks:
+      - frontend
+    restart: unless-stopped
+
+networks:
+  frontend:
+    external: true

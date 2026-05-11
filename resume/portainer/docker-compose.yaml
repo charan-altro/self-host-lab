@@ -1,0 +1,24 @@
+services:
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.portainer-https.rule=Host(`portainer.jedarabale.space`)"
+      - "traefik.http.routers.portainer-https.entrypoints=websecure"
+      - "traefik.http.routers.portainer-https.service=portainer"
+      - "traefik.http.routers.portainer-https.tls.certresolver=cloudflare"
+      - "traefik.http.services.portainer.loadbalancer.server.port=9000"
+    networks:
+      - frontend
+    restart: unless-stopped
+
+volumes:
+  portainer_data:
+
+networks:
+  frontend:
+    external: true

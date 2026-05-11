@@ -1,0 +1,15 @@
+server {
+    listen 80;
+    server_name _;
+    
+    root /usr/share/nginx/html;
+    index index.html index.htm;
+    
+    location / {
+        try_files $uri $uri/ =404; # REMOVED try_files to allow 404s to happen naturallytry_files $uri $uri/ /index.html;
+    }
+    
+    # Disable directory listing
+    #autoindex off;
+}
+

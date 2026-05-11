@@ -1,0 +1,24 @@
+version: "3"
+
+services:
+  # FlareSolverr bypasses Cloudflare browser checks for torrent domains
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: flaresolverr
+    environment:
+      - LOG_LEVEL=info
+      - LOG_HTML=false
+      - CAPTCHA_SOLVER=none
+      - TZ=Asia/Kolkata
+      # Route all FlareSolverr traffic through our internal Tor HTTP proxy (Privoxy)
+      - ALL_PROXY=http://tor-proxy:8118
+      - BROWSER_TIMEOUT=120000
+    ports:
+      - "8191:8191"
+    networks:
+      - frontend
+    restart: unless-stopped
+
+networks:
+  frontend:
+    external: true

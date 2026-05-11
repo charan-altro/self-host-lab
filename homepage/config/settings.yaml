@@ -1,0 +1,16 @@
+---
+
+layout:
+  🎬 Remote Media:
+    tab: Remote Access
+  🤖 Remote Automation:
+    tab: Remote Access
+  ⚙️ Remote System:
+    tab: Remote Access
+    
+  🎬 Local Media:
+    tab: Local Network
+  🤖 Local Automation:
+    tab: Local Network
+  ⚙️ Local System:
+    tab: Local Network

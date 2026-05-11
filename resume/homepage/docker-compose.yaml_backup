@@ -1,0 +1,37 @@
+services:
+  homepage:
+    image: ghcr.io/gethomepage/homepage:latest
+    container_name: homepage
+    environment:
+      - HOMEPAGE_ALLOWED_HOSTS=homepage.jedarabale.space,localhost,127.0.0.1
+    volumes:
+      - ./config:/app/config
+      - /var/run/docker.sock:/var/run/docker.sock:ro # Allows it to see other containers
+    labels:
+      - "traefik.enable=true"
+      
+      # Router Configuration (Cloudflare HTTPS)
+      - "traefik.http.routers.homepage.rule=Host(`homepage.jedarabale.space`)"
+      - "traefik.http.routers.homepage.entrypoints=websecure"
+      - "traefik.http.routers.homepage.tls.certresolver=cloudflare"
+      - "traefik.http.routers.homepage.service=homepage"
+      
+      # SECURITY LAYER: Basic Auth Middleware
+      # Replace the part after '=' with your generated string
+      # Note: Dollar signs $ in the hash must be doubled $$ for docker-compose!
+      # Example: user:$$apr1$$xyz...
+      #- "traefik.http.middlewares.homepage-auth.basicauth.users=charan:$$apr1$$Ri.zpmB2$$/H9ErUGuDVej4rOV/2Pid0"
+      - "traefik.http.middlewares.homepage-auth.basicauth.users=charan:$$apr1$$Ri.zpmB2$$/H9ErUGuDVej4rOV/2Pid0"      
+      # Attach Security to Router
+      - "traefik.http.routers.homepage.middlewares=homepage-auth"
+      
+      # Service Port
+      - "traefik.http.services.homepage.loadbalancer.server.port=3000"
+      
+    networks:
+      - frontend
+    restart: unless-stopped
+
+networks:
+  frontend:
+    external: true

@@ -1,0 +1,25 @@
+services:
+  jellyfin:
+    image: jellyfin/jellyfin:latest
+    container_name: jellyfin
+    volumes:
+      - /srv/jellyfin/config:/config
+      - /srv/jellyfin/cache:/cache
+      - /mnt/raksha:/media
+    environment:
+      - PUID=1000
+      - PGID=1000
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jellyfin-https.rule=Host(`jellypin.jedarabale.space`)"
+      - "traefik.http.routers.jellyfin-https.entrypoints=websecure"
+      - "traefik.http.routers.jellyfin-https.service=jellyfin"
+      - "traefik.http.routers.jellyfin-https.tls.certresolver=cloudflare"
+      - "traefik.http.services.jellyfin.loadbalancer.server.port=8096"
+    networks:
+      - frontend
+    restart: unless-stopped
+
+networks:
+  frontend:
+    external: true

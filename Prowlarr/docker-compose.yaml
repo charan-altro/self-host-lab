@@ -1,0 +1,30 @@
+version: "3"
+
+services:
+  # Prowlarr handles all indexers for Radarr/Sonarr
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+    volumes:
+      - /home/homeserver/app_configs/prowlarr_config:/config
+    ports:
+      - "9696:9696"
+    networks:
+      - frontend
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.prowlarr-https.rule=Host(`prowlarr.jedarabale.space`)" 
+      - "traefik.http.routers.prowlarr-https.entrypoints=websecure"
+      - "traefik.http.routers.prowlarr-https.service=prowlarr"
+      - "traefik.http.routers.prowlarr-https.tls.certresolver=cloudflare"
+      - "traefik.http.services.prowlarr.loadbalancer.server.port=9696"
+
+networks:
+  frontend:
+    external: true
+

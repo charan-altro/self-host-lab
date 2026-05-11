@@ -1,0 +1,32 @@
+services:
+  homepage:
+    image: ghcr.io/gethomepage/homepage:latest
+    container_name: homepage
+    #env_file:
+      #- .env
+    environment:
+      # Use * to allow connection from your local network IP
+      - HOMEPAGE_ALLOWED_HOSTS=*
+    ports:
+      # Exposes port 3000 for direct Local Access (Bypasses Traefik)
+      - "3000:3000"
+    volumes:
+      - ./config:/app/config
+      - ./config/secrets.yaml:/app/config/secrets.yaml:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro # Allows it to see other containers
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.homepage-https.rule=Host(`homepage.jedarabale.space`)"
+      - "traefik.http.routers.homepage-https.entrypoints=websecure"
+      - "traefik.http.routers.homepage-https.tls.certresolver=cloudflare"
+      - "traefik.http.routers.homepage-final.priority=100"
+      # Keeps your existing Traefik authentication for Internet Access
+      - "traefik.http.routers.homepage-https.middlewares=homepage-auth@file"
+      - "traefik.http.services.homepage-final.loadbalancer.server.port=3000"
+    networks:
+      - frontend
+    restart: unless-stopped
+
+networks:
+  frontend:
+    external: true

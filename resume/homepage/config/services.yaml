@@ -1,0 +1,31 @@
+- Media:
+    - Jellyfin:
+        icon: jellyfin.png
+        href: https://jellyfin.jedarabale.space
+        description: Media Server
+    - qBittorrent:
+        icon: qbittorrent.png
+        href: https://qbit.jedarabale.space
+        description: Downloads
+
+- System:
+    - Portainer:
+        icon: portainer.png
+        href: https://portainer.jedarabale.space
+        description: Docker Management
+    - Pi-hole:
+        icon: pi-hole.png
+        href: https://adblock.jedarabale.space/admin
+        description: Network AdBlock
+    - Netdata:
+        icon: netdata.png
+        href: https://netdata.jedarabale.space
+        description: Metrics
+
+- Tools:
+    - PDF Tools:
+        icon: pdf.png
+        href: https://pdf.jedarabale.space
+    - Beszel:
+        icon: beszel.png
+        href: https://beszel.jedarabale.space

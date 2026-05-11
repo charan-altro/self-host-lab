@@ -1,0 +1,32 @@
+services:
+  gemini:
+    image: us-docker.pkg.dev/gemini-code-dev/gemini-cli/sandbox:0.1.1
+    platform: linux/amd64
+    container_name: gemini-cli
+    volumes:
+      - ./workspace:/workspace
+      - gemini-config:/root/.config/gemini
+      - gemini-history:/root/.local/share/gemini  # Chat history persists
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+    ports:
+      - "8082:8080"  # Localhost access
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.gemini-https.rule=Host(`gemini.jedarabale`)"
+      - "traefik.http.routers.gemini-https.entrypoints=websecure"
+      - "traefik.http.routers.gemini-https.service=gemini"
+      - "traefik.http.services.gemini.loadbalancer.server.port=8080"
+      - "traefik.http.routers.gemini-https.tls.certresolver=cloudflare"
+    command: ["sh", "-c", "gemini server --port 8080 --host 0.0.0.0 --history"]
+    networks:
+      - frontend
+    restart: unless-stopped
+
+networks:
+  frontend:
+    external: true
+volumes:
+  gemini-config:
+  gemini-history:

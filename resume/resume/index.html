@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Charan Kumar BS - Professional Resume</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #2563eb;       /* Modern Blue */
+            --sidebar-bg: #1e293b;    /* Dark Slate */
+            --sidebar-text: #f8fafc;  /* Off-white */
+            --body-bg: #f1f5f9;       /* Light Gray background */
+            --text-dark: #334155;     /* Dark text */
+            --text-light: #64748b;    /* Muted text */
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--body-bg);
+            margin: 0;
+            padding: 40px 0;
+            color: var(--text-dark);
+        }
+
+        /* --- Main Container (Paper) --- */
+        .resume-container {
+            display: grid;
+            grid-template-columns: 300px 1fr; /* Sidebar | Main Content */
+            width: 100%;
+            max-width: 1000px;
+            min-height: 1100px; /* A4 Ratioish */
+            background: white;
+            margin: 0 auto;
+            box-shadow: var(--shadow);
+            overflow: hidden; /* Contains the sidebar float */
+        }
+
+        /* --- Left Column: Sidebar --- */
+        .sidebar {
+            background-color: var(--sidebar-bg);
+            color: var(--sidebar-text);
+            padding: 40px 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .profile-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: #334155; /* Fallback if no image */
+            margin: 0 auto 20px;
+            /* background-image: url('profile.jpg'); */
+            background-size: cover;
+            background-position: center;
+            border: 4px solid rgba(255,255,255,0.1);
+        }
+
+        .sidebar h2 {
+            font-size: 1.1em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            color: #93c5fd;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+            word-break: break-all;
+        }
+
+        .contact-item i {
+            width: 20px;
+            color: #60a5fa;
+        }
+
+        .contact-item a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .skill-list div {
+            margin-bottom: 10px;
+        }
+        
+        .skill-bar-bg {
+            background: rgba(255,255,255,0.1);
+            height: 6px;
+            border-radius: 3px;
+            margin-top: 5px;
+        }
+        
+        .skill-bar-fill {
+            background: #60a5fa;
+            height: 100%;
+            border-radius: 3px;
+        }
+
+        /* --- Right Column: Main Content --- */
+        .main-content {
+            padding: 50px 50px;
+        }
+
+        .header {
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin: 0;
+            color: #0f172a;
+            line-height: 1;
+        }
+
+        .header .role {
+            font-size: 1.2em;
+            color: var(--primary);
+            font-weight: 600;
+            margin-top: 10px;
+            display: block;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 1.3em;
+            color: #0f172a;
+            margin-bottom: 25px;
+            font-weight: 700;
+        }
+
+        .section-title i {
+            color: var(--primary);
+            background: #eff6ff;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.8em;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 30px;
+            border-left: 2px solid #e2e8f0;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -6px;
+            top: 5px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--primary);
+            border: 2px solid white;
+        }
+
+        .timeline-header h3 {
+            margin: 0;
+            font-size: 1.1em;
+            color: #1e293b;
+        }
+
+        .timeline-header .company {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .timeline-date {
+            font-size: 0.85em;
+            color: var(--text-light);
+            margin-top: 4px;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .description {
+            font-size: 0.95em;
+            color: #475569;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .description li {
+            margin-bottom: 5px;
+        }
+
+        /* --- Floating Print Button --- */
+        .fab-print {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--primary);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 20px rgba(37, 99, 235, 0.4);
+            cursor: pointer;
+            border: none;
+            transition: transform 0.2s;
+        }
+        .fab-print:hover { transform: scale(1.1); }
+
+        /* --- Mobile Responsiveness --- */
+        @media (max-width: 768px) {
+            .resume-container {
+                grid-template-columns: 1fr;
+                width: 95%;
+                margin: 20px auto;
+            }
+            .sidebar {
+                padding: 30px;
+                text-align: center;
+            }
+            .contact-item {
+                justify-content: center;
+            }
+            .main-content {
+                padding: 30px;
+            }
+            .header { text-align: center; }
+            .timeline-item { padding-left: 0; border: none; }
+            .timeline-item::before { display: none; }
+        }
+
+        /* --- Print Styles (For PDF) --- */
+        @media print {
+            body { padding: 0; background: white; }
+            .resume-container { 
+                box-shadow: none; 
+                margin: 0; 
+                width: 100%; 
+                max-width: 100%;
+                grid-template-columns: 280px 1fr; /* Force sidebar on print */
+            }
+            .fab-print { display: none; } /* Hide button */
+            a { text-decoration: none; color: inherit; }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="fab-print" onclick="window.print()" title="Download PDF">
+        <i class="fa-solid fa-file-arrow-down"></i>
+    </button>
+
+    <div class="resume-container">
+        <aside class="sidebar">
+            <div class="profile-photo"></div>
+            
+            <section>
+                <h2>Contact</h2>
+                <div class="contact-item">
+                    <i class="fa-solid fa-envelope"></i>
+                    <a href="mailto:charankumar971@hotmail.com">charankumar971@hotmail.com</a>
+                </div>
+                <div class="contact-item">
+                    <i class="fa-solid fa-phone"></i>
+                    <span>+91-9739900535</span>
+                </div>
+                <div class="contact-item">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <span>Bangalore, India</span>
+                </div>
+            </section>
+
+            <section>
+                <h2>Tech Stack</h2>
+                <div class="skill-list">
+                    <div>
+                        <span>Middleware (WebLogic)</span>
+                        <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 95%"></div></div>
+                    </div>
+                    <div>
+                        <span>CI/CD (Jenkins, Ansible)</span>
+                        <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 90%"></div></div>
+                    </div>
+                    <div>
+                        <span>Docker & Kubernetes</span>
+                        <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 80%"></div></div>
+                    </div>
+                    <div>
+                        <span>Python & Bash Scripting</span>
+                        <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 85%"></div></div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>Education</h2>
+                <div style="font-size: 0.9em; line-height: 1.5;">
+                    <p>• BE in ME<br><span style="color: #94a3b8; font-size: 0.9em;">DBIT College (2014-2017)</span></p>
+                    <p>• Diploma in ME<br><span style="color: #94a3b8; font-size: 0.9em;">GPTR (2011-2014)</span></p>
+                </div>
+            </section>
+        </aside>
+
+        <main class="main-content">
+            <div class="header">
+                <h1>Charan Kumar BS</h1>
+                <span class="role">Middleware Admin/DevOps Engineer</span>
+            </div>
+
+            <section>
+                <div class="section-title">
+                    <i class="fa-solid fa-user"></i>
+                    Professional Summary
+                </div>
+                <p style="color: #475569; line-height: 1.6;">
+                    Over 3 years of progressive experience in Middleware and DevOps, including Build setup, Continuous Integration, and Source Code Management. 
+                    Experienced in automating application deployment in Dev, QA, and Production environments using Jenkins, Ansible, Docker, and Kubernetes. 
+                    Strong background in Linux administration and WebLogic Server management.
+                </p>
+            </section>
+
+            <section>
+                <div class="section-title">
+                    <i class="fa-solid fa-briefcase"></i>
+                    Experience
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-header">
+                        <h3>Middleware Admin/DevOps Engineer</h3>
+                        <span class="company">TCS</span>
+                    </div>
+                    <span class="timeline-date">Dec 2020 - Present</span>
+                    <ul class="description">
+                        <li>Configured CI tools (Jenkins) from scratch, managed plugins, slave nodes, and build/deployment jobs.</li>
+                        <li>Automated application deployment in Dev, QA, and Production environments using Ansible playbooks and modules.</li>
+                        <li>Managed cloud-based applications using Kubernetes, Docker, Rancher, and Harbor.</li>
+                        <li>Configured Clusters, load-balancing, and fail-over solutions for WebLogic application server.</li>
+                    </ul>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-header">
+                        <h3>Linux Admin/Control-M Admin</h3>
+                        <span class="company">TCS</span>
+                    </div>
+                    <span class="timeline-date">Feb 2019 - Dec 2020</span>
+                    <ul class="description">
+                        <li>Monitored and administered the Control-M automation tool and Linux/UNIX operating systems.</li>
+                        <li>Managed user accounts, permissions, web servers, and file servers.</li>
+                        <li>Drove bridge calls and change control board meetings for production/QA deployments.</li>
+                        <li>Troubleshot system and application issues, including boot processes and log analysis.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section>
+                <div class="section-title">
+                    <i class="fa-solid fa-trophy"></i>
+                    Achievements
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-header">
+                        <h3>Process Improvement & Automation</h3>
+                    </div>
+                    <ul class="description">
+                        <li>Reduced Jenkins deployment failures in Windows server using PowerShell scripts to log off user sessions.</li>
+                        <li>Automated Linux server disk space management using Bash scripting, Ansible, and Jenkins pipelines.</li>
+                        <li>Automated JAR, WAR, and EAR file deployments in WebLogic using WLST, Bash, and Python.</li>
+                        <li>Improved database connectivity failures in WebLogic by automating JDBC connection pool resets.</li>
+                    </ul>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+</body>
+</html>

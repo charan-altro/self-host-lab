@@ -1,0 +1,138 @@
+- 🌍 SECURE INTERNET ACCESS:
+    - Jellyfin:
+        icon: jellyfin.png
+        href: https://jellyfin.jedarabale.space
+        description: Media Server
+    - qBittorrent:
+        icon: qbittorrent.png
+        href: https://qbit.jedarabale.space
+        description: Torrent Client
+    - Sonarr:
+        icon: sonarr.png
+        href: https://sonarr.jedarabale.space
+        description: TV Shows
+    - Radarr:
+        icon: radarr.png
+        href: https://radarr.jedarabale.space
+        description: Movies
+    - Prowlarr:
+        icon: prowlarr.png
+        href: https://prowlarr.jedarabale.space
+        description: Indexer Manager
+    - Rarbg Search:
+        icon: magnet.png
+        href: https://torrent.jedarabale.space
+        description: Torrent Search API
+    - PDF Tools:
+        icon: pdf.png
+        href: https://pdf.jedarabale.space
+        description: PDF Compressor
+    - Portainer:
+        icon: portainer.png
+        href: https://portainer.jedarabale.space
+        description: Docker Management
+    - Pi-hole:
+        icon: pi-hole.png
+        href: https://adblock.jedarabale.space/admin
+        description: Network AdBlock
+    - Netdata:
+        icon: netdata.png
+        href: https://netdata.jedarabale.space
+        description: Server Metrics
+    - Beszel:
+        icon: beszel.png
+        href: https://beszel.jedarabale.space
+        description: Light Server Monitoring
+- 🏠 FAST LOCAL ACCESS:
+    - Jellyfin (Local):
+        icon: jellyfin.png
+        href: http://192.168.1.9:8096
+        description: Direct LAN
+        widget:
+            type: jellyfin
+            url: http://jellyfin:8096
+            key: "bbc461a1a4304d4d9392346773706ec9"
+
+    - qBittorrent (Local):
+        icon: qbittorrent.png
+        href: http://192.168.1.9:8123
+        description: Direct LAN
+        widget:
+            type: qbittorrent
+            url: http://qbittorrent:8123
+            username: admin
+            password: Tcstvm@feb21
+
+    - Sonarr (Local):
+        icon: sonarr.png
+        href: http://192.168.1.9:8989
+        description: Direct LAN
+        widget:
+            type: sonarr
+            url: http://sonarr:8989
+            key: "3b991d2f7bb84c618ef8cd1ef8f34fee"
+
+    - Radarr (Local):
+        icon: radarr.png
+        href: http://192.168.1.9:7878
+        description: Direct LAN
+        widget:
+            type: radarr
+            url: http://radarr:7878
+            key: "084df558321e44c78c63caef6b3ec78c"
+
+    - Prowlarr (Local):
+        icon: prowlarr.png
+        href: http://192.168.1.9:9696
+        description: Direct LAN
+        widget:
+            type: prowlarr
+            url: http://prowlarr:9696
+            key: "4c49502c72694eef92dac17abb1a3bcc"
+
+    - Pi-hole (Local):
+        icon: pi-hole.png
+        href: http://192.168.1.9:8080/admin
+        description: Dashboard
+        widget:
+            type: pihole
+            url: http://pihole:80
+            #key: "{{HOMEPAGE_VAR_PIHOLE_API_KEY}}"
+
+    - Rarbg Search (Local):
+        icon: magnet.png
+        href: http://192.168.1.9:8060
+        description: Torrent Search API
+
+    - PDF Tools (Local):
+        icon: pdf.png
+        href: http://192.168.1.9:8050
+        description: PDF Compressor
+
+    - Netdata (Local):
+        icon: netdata.png
+        href: http://192.168.1.9:19999
+        description: Server Metrics
+        widget:
+            type: netdata
+            url: http://netdata:19999
+
+    - Beszel (Local):
+        icon: beszel.png
+        href: http://192.168.1.9:8090
+        description: Server Monitoring
+
+    - FileBrowser (Local):
+        icon: files.png
+        href: http://192.168.1.9:8001
+        description: File Management
+
+    - Portainer (Local):
+        icon: portainer.png
+        href: http://192.168.1.9:9000
+        description: Docker Management
+        widget:
+            type: portainer
+            url: http://portainer:9000
+            env: 3
+            key: "ptr_QEtxd5dW3fOqlH50Uq6o9dioHTfx9/gAPFZBBLz+rW8="

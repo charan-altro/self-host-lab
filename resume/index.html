@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jedar Abale - Professional Resume</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #2563eb;       /* Modern Blue */
+            --sidebar-bg: #1e293b;    /* Dark Slate */
+            --sidebar-text: #f8fafc;  /* Off-white */
+            --body-bg: #f1f5f9;       /* Light Gray background */
+            --text-dark: #334155;     /* Dark text */
+            --text-light: #64748b;    /* Muted text */
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-print-color-adjust: exact;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--body-bg);
+            margin: 0;
+            padding: 40px 0;
+            color: var(--text-dark);
+        }
+
+        /* --- Main Container (Paper) --- */
+        .resume-container {
+            display: grid;
+            grid-template-columns: 300px 1fr; /* Sidebar | Main Content */
+            width: 100%;
+            max-width: 1000px;
+            min-height: 1100px; /* A4 Ratioish */
+            background: white;
+            margin: 0 auto;
+            box-shadow: var(--shadow);
+            overflow: hidden; /* Contains the sidebar float */
+        }
+
+        /* --- Left Column: Sidebar --- */
+        .sidebar {
+            background-color: var(--sidebar-bg);
+            color: var(--sidebar-text);
+            padding: 40px 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .profile-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: #334155; /* Fallback if no image */
+            margin: 0 auto 20px;
+            background-image: url('profile.jpg'); /* Put your photo here */
+            background-size: cover;
+            background-position: center;
+            border: 4px solid rgba(255,255,255,0.1);
+        }
+
+        .sidebar h2 {
+            font-size: 1.1em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            color: #93c5fd;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+            word-break: break-all;
+        }
+
+        .contact-item i {
+            width: 20px;
+            color: #60a5fa;
+        }
+
+        .contact-item a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .skill-list div {
+            margin-bottom: 10px;
+        }
+        
+        .skill-bar-bg {
+            background: rgba(255,255,255,0.1);
+            height: 6px;
+            border-radius: 3px;
+            margin-top: 5px;
+        }
+        
+        .skill-bar-fill {
+            background: #60a5fa;
+            height: 100%;
+            border-radius: 3px;
+        }
+
+        /* --- Right Column: Main Content --- */
+        .main-content {
+            padding: 50px 50px;
+        }
+
+        .header {
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin: 0;
+            color: #0f172a;
+            line-height: 1;
+        }
+
+        .header .role {
+            font-size: 1.2em;
+            color: var(--primary);
+            font-weight: 600;
+            margin-top: 10px;
+            display: block;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 1.3em;
+            color: #0f172a;
+            margin-bottom: 25px;
+            font-weight: 700;
+        }
+
+        .section-title i {
+            color: var(--primary);
+            background: #eff6ff;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.8em;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 30px;
+            border-left: 2px solid #e2e8f0;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -6px;
+            top: 5px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--primary);
+            border: 2px solid white;
+        }
+
+        .timeline-header h3 {
+            margin: 0;
+            font-size: 1.1em;
+            color: #1e293b;
+        }
+
+        .timeline-header .company {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .timeline-date {
+            font-size: 0.85em;
+            color: var(--text-light);
+            margin-top: 4px;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .description {
+            font-size: 0.95em;
+            color: #475569;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .description li {
+            margin-bottom: 5px;
+        }
+
+        /* --- Floating Print Button --- */
+        .fab-print {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--primary);
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 20px rgba(37, 99, 235, 0.4);
+            cursor: pointer;
+            border: none;
+            transition: transform 0.2s;
+        }
+        .fab-print:hover { transform: scale(1.1); }
+
+        /* --- Mobile Responsiveness --- */
+        @media (max-width: 768px) {
+            .resume-container {
+                grid-template-columns: 1fr;
+                width: 95%;
+                margin: 20px auto;
+            }
+            .sidebar {
+                padding: 30px;
+                text-align: center;
+            }
+            .contact-item {
+                justify-content: center;
+            }
+            .main-content {
+                padding: 30px;
+            }
+            .header { text-align: center; }
+            .timeline-item { padding-left: 0; border: none; }
+            .timeline-item::before { display: none; }
+        }
+
+        /* --- Print Styles (For PDF) --- */
+        @media print {
+            body { padding: 0; background: white; }
+            .resume-container { 
+                box-shadow: none; 
+                margin: 0; 
+                width: 100%; 
+                max-width: 100%;
+                grid-template-columns: 280px 1fr; /* Force sidebar on print */
+            }
+            .fab-print { display: none; } /* Hide button */
+            a { text-decoration: none; color: inherit; }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="fab-print" onclick="window.print()" title="Download PDF">
+        <i class="fa-solid fa-file-arrow-down"></i>
+    </button>
+
+    <div class="resume-container">
+        <aside class="sidebar">
+            <div class="profile-photo"></div>
+            
+            <section>
+                <h2>Contact</h2>
+                <div class="contact-item">
+                    <i class="fa-solid fa-envelope"></i>
+                    <a href="mailto:hello@jedarabale.space">hello@jedarabale.space</a>
+                </div>
+                <div class="contact-item">
+                    <i class="fa-solid fa-globe"></i>
+                    <a href="https://jedarabale.space" target="_blank">jedarabale.space</a>
+                </div>
+                <div class="contact-item">
+                    <i class="fa-brands fa-github"></i>
+                    <a href="#">github.com/jedar</a>
+                </div>
+                <div class="contact-item">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <span>Remote / Earth</span>
+                </div>
+            </section>
+
+            <section>
+                <h2>Tech Stack</h2>
+                <div class="skill-list">
+                    <div>
+                        <span>Docker & Traefik</span>
+                        <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 95%"></div></div>
+                    </div>
+                    <div>
+                        <span>Linux Administration</span>
+                        <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 90%"></div></div>
+                    </div>
+                    <div>
+                        <span>Python / Bash</span>
+                        <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 80%"></div></div>
+                    </div>
+                    <div>
+                        <span>CI/CD Pipelines</span>
+                        <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 75%"></div></div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>Certifications</h2>
+                <div style="font-size: 0.9em; line-height: 1.5;">
+                    <p>• AWS Certified Solutions Architect</p>
+                    <p>• Docker Certified Associate</p>
+                </div>
+            </section>
+        </aside>
+
+        <main class="main-content">
+            <div class="header">
+                <h1>Jedar Abale</h1>
+                <span class="role">System Administrator & DevOps Engineer</span>
+            </div>
+
+            <section>
+                <div class="section-title">
+                    <i class="fa-solid fa-user"></i>
+                    About Me
+                </div>
+                <p style="color: #475569; line-height: 1.6;">
+                    Passionate self-hoster and infrastructure engineer with expertise in container orchestration. 
+                    I specialize in building secure, automated environments using Docker, Traefik, and Cloudflare. 
+                    Currently managing a hybrid homelab environment serving highly available web services.
+                </p>
+            </section>
+
+            <section>
+                <div class="section-title">
+                    <i class="fa-solid fa-briefcase"></i>
+                    Experience
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-header">
+                        <h3>Senior DevOps Engineer</h3>
+                        <span class="company">Tech Flow Systems</span>
+                    </div>
+                    <span class="timeline-date">Jan 2022 - Present</span>
+                    <ul class="description">
+                        <li>Architected a containerized deployment system using Docker Compose and Traefik v3.</li>
+                        <li>Automated SSL certificate renewal via Cloudflare API and Let's Encrypt.</li>
+                        <li>Reduced server costs by 30% by optimizing container resource limits.</li>
+                    </ul>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-header">
+                        <h3>System Administrator</h3>
+                        <span class="company">Global Connect</span>
+                    </div>
+                    <span class="timeline-date">Mar 2019 - Dec 2021</span>
+                    <ul class="description">
+                        <li>Maintained 50+ Linux servers (Ubuntu/CentOS) ensuring 99.9% uptime.</li>
+                        <li>Implemented centralized logging and monitoring using Prometheus and Grafana.</li>
+                        <li>Scripted daily backup routines to offsite storage locations.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section>
+                <div class="section-title">
+                    <i class="fa-solid fa-code-branch"></i>
+                    Projects
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-header">
+                        <h3>HomeLab Infrastructure</h3>
+                    </div>
+                    <ul class="description">
+                        <li><b>Tech:</b> Docker, Traefik, Authelia, Cloudflare Tunnel.</li>
+                        <li>Self-hosted dashboard managing 20+ services including media servers, DNS, and automation tools.</li>
+                        <li>Secured via Middleware authentication and geoblocking.</li>
+                    </ul>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+</body>
+</html>

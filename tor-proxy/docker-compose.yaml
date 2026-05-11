@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+  tor-proxy:
+    image: dperson/torproxy:latest
+    container_name: tor-proxy
+    ports:
+      - "1080:9050" # This image exposes SOCKS on 9050 instead of 9150
+    networks:
+      - frontend
+    restart: unless-stopped
+
+networks:
+  frontend:
+    external: true

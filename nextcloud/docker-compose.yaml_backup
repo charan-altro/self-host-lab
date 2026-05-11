@@ -1,0 +1,62 @@
+services:
+  nextcloud-aio-mastercontainer:
+    image: ghcr.io/nextcloud-releases/all-in-one:latest
+    init: true
+    restart: unless-stopped
+    container_name: nextcloud-aio-mastercontainer
+    volumes:
+      - nextcloud_aio_mastercontainer:/mnt/docker-aio-config
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    ports:
+      - "11000:11000"  # Nextcloud Apache
+      - "8085:8080"    # AIO Interface (remapped)
+      - "8443:8443"
+    networks:
+      - frontend
+    labels:
+      - "traefik.enable=true"
+      
+      # HTTP → HTTPS redirect (domain)
+      - "traefik.http.routers.nextcloud-http.rule=Host(`nextcloud.jedarabale.space`)"
+      - "traefik.http.routers.nextcloud-http.entrypoints=web"
+      - "traefik.http.routers.nextcloud-http.middlewares=redirect-to-https"
+      - "traefik.http.routers.nextcloud-http.service=nextcloud"
+
+      # HTTPS domain (Cloudflare TLS)
+      - "traefik.http.routers.nextcloud-https.rule=Host(`nextcloud.jedarabale.space`)"
+      - "traefik.http.routers.nextcloud-https.entrypoints=websecure"
+      - "traefik.http.routers.nextcloud-https.service=nextcloud"
+      - "traefik.http.routers.nextcloud-https.tls.certresolver=cloudflare"
+      
+      # Local IP access (Nextcloud)
+      - "traefik.http.routers.nextcloud-local.rule=HostRegexp(`{ip:.*}`)"
+      - "traefik.http.routers.nextcloud-local.entrypoints=web"
+      - "traefik.http.routers.nextcloud-local.service=nextcloud"
+
+      # AIO Interface (domain)
+      - "traefik.http.routers.aio-https.rule=Host(`aio.jedarabale.space`)"
+      - "traefik.http.routers.aio-https.entrypoints=websecure"
+      - "traefik.http.routers.aio-https.service=aio"
+      - "traefik.http.routers.aio-https.tls.certresolver=cloudflare"
+
+      # AIO Interface (local IP) - port 8081
+      - "traefik.http.routers.aio-local.rule=HostRegexp(`{ip:.*}`)"
+      - "traefik.http.routers.aio-local.entrypoints=web"
+      - "traefik.http.routers.aio-local.service=aio"
+
+      # Services
+      #- "traefik.http.services.nextcloud.loadbalancer.server.port=11000"
+      - "traefik.http.services.aio.loadbalancer.server.port=8080"  # Internal container port
+
+    environment:
+      #- APACHE_PORT=11000
+      #- APACHE_IP_BINDING=0.0.0.0
+      - SKIP_DOMAIN_VALIDATION=true
+
+networks:
+  frontend:
+    external: true
+
+volumes:
+  nextcloud_aio_mastercontainer:
+    name: nextcloud_aio_mastercontainer

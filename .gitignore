@@ -1,0 +1,16 @@
+config.php
+secrets/
+# Ignore log files and backups
+*.log
+*.bak
+*.bak[0-9]*
+*.swp
+
+# Ignore active databases and caches (Git is bad at tracking these)
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+
+# Ignore specific root-owned or problematic files
+pihole/etc-pihole/logrotate

@@ -1,0 +1,90 @@
+version: '3.8'
+
+services:
+  netdata:
+    image: netdata/netdata:latest
+    container_name: netdata
+    hostname: ${HOSTNAME:-raspberry-pi}
+    networks:
+      - monitoring
+      - frontend
+    ports:
+      - "19999:19999"  # Direct access fallback
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /sys/class/thermal:/sys/class/thermal:ro  # Pi temps
+      - netdata_data:/var/lib/netdata
+    environment:
+      - NETDATA_CLAIM_TOKEN=${NETDATA_CLAIM_TOKEN}  # Optional cloud
+      - PGID=1000  # Your group ID
+      - memory.dedicated=20M  # Pi-optimized
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.netdata.rule=Host(`netdata.${DOMAIN}`)"
+      - "traefik.http.routers.netdata.entrypoints=websecure"
+      - "traefik.http.routers.netdata.tls.certresolver=cloudflare"
+      - "traefik.http.services.netdata.loadbalancer.server.port=19999"
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 50M
+        reservations:
+          memory: 20M
+
+  beszel-server:
+    image: ghcr.io/philipplinnane/beszel-server:latest
+    container_name: beszel-server
+    networks:
+      - monitoring
+      - frontend
+    ports:
+      - "3001:3001"  # Direct access
+    volumes:
+      - beszel_data:/app/data
+    environment:
+      - DATABASE_URL=sqlite:///app/data/beszel.db
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.beszel.rule=Host(`beszel.${DOMAIN}`)"
+      - "traefik.http.routers.beszel.entrypoints=websecure"
+      - "traefik.http.routers.beszel.tls.certresolver=cloudflare"
+      - "traefik.http.services.beszel.loadbalancer.server.port=3001"
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 20M
+
+  beszel-agent:
+    image: ghcr.io/philipplinnane/beszel-agent:latest
+    container_name: beszel-agent
+    networks:
+      - monitoring
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - beszel_agent:/app/data
+    environment:
+      - SERVER_URL=http://beszel-server:3001
+      - TOKEN=your-agent-token-here  # Get from Beszel UI after first run
+    depends_on:
+      - beszel-server
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 10M
+networks:
+  monitoring:
+    driver: bridge
+  frontend:
+    external: true
+
+volumes:
+  netdata_data:
+  beszel_data:
+  beszel_agent:

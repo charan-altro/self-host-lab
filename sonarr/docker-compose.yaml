@@ -1,0 +1,37 @@
+# ─── Sonarr — Raspberry Pi 4B ─────────────────────────────────────────
+# Access:
+#   Local LAN    → http://<PI-LAN-IP>:8989
+#   Tailscale    → http://<PI-TAILSCALE-IP>:8989  (if Tailscale on host)
+#   Public HTTPS → https://sonarr.jedarabale.space  (via Traefik)
+
+services:
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+    volumes:
+      - /home/homeserver/app_configs/sonarr_config:/config
+      # Mount the parent drive to /data so Sonarr can access media:
+      # /data/MEDIA/TVShows
+      - /mnt/fastmedia:/data
+      # Mount torrents path
+      - /mnt/fastmedia/torrents:/downloads
+    ports:
+      - "8989:8989"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.sonarr-https.rule=Host(`sonarr.jedarabale.space`)"
+      - "traefik.http.routers.sonarr-https.entrypoints=websecure"
+      - "traefik.http.routers.sonarr-https.service=sonarr"
+      - "traefik.http.routers.sonarr-https.tls.certresolver=cloudflare"
+      - "traefik.http.services.sonarr.loadbalancer.server.port=8989"
+    networks:
+      - frontend
+    restart: unless-stopped
+
+networks:
+  frontend:
+    external: true

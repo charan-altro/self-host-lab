@@ -1,0 +1,24 @@
+services:
+  homepage:
+    image: ghcr.io/gethomepage/homepage:latest
+    container_name: homepage
+    environment:
+      - HOMEPAGE_ALLOWED_HOSTS=homepage.jedarabale.space,localhost,127.0.0.1
+    volumes:
+      - ./config:/app/config
+      - /var/run/docker.sock:/var/run/docker.sock:ro # Allows it to see other containers
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.homepage-https.rule=Host(`homepage.jedarabale.space`)"
+      - "traefik.http.routers.homepage-https.entrypoints=websecure"
+      - "traefik.http.routers.homepage-https.tls.certresolver=cloudflare"
+      - "traefik.http.routers.homepage-final.priority=100"
+      - "traefik.http.routers.homepage-https.middlewares=homepage-auth@file"
+      - "traefik.http.services.homepage-final.loadbalancer.server.port=3000"
+    networks:
+      - frontend
+    restart: unless-stopped
+
+networks:
+  frontend:
+    external: true
