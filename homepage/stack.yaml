@@ -1,0 +1,38 @@
+version: '3.8'
+services:
+  homepage:
+    image: ghcr.io/gethomepage/homepage:latest
+    environment:
+      - HOMEPAGE_ALLOWED_HOSTS=*
+    ports:
+      - target: 3000
+        published: 3000
+        protocol: tcp
+        mode: ingress
+    volumes:
+      - /home/homeserver/PROD/homepage/config:/app/config
+      - /home/homeserver/PROD/homepage/config/secrets.yaml:/app/config/secrets.yaml:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - proxy-net
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      update_config:
+        order: stop-first
+      placement:
+        constraints:
+          - node.role == manager
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.homepage-https.rule=Host(`homepage.jedarabale.space`)"
+        - "traefik.http.routers.homepage-https.entrypoints=websecure"
+        - "traefik.http.routers.homepage-https.tls.certresolver=cloudflare"
+        - "traefik.http.routers.homepage-final.priority=100"
+        - "traefik.http.routers.homepage-https.middlewares=homepage-auth@file"
+        - "traefik.http.services.homepage-final.loadbalancer.server.port=3000"
+
+networks:
+  proxy-net:
+    external: true

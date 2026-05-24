@@ -1,0 +1,36 @@
+version: '3.8'
+services:
+  jellyseerr:
+    image: fallenbagel/jellyseerr:latest
+    environment:
+      - LOG_LEVEL=debug
+      - TZ=Asia/Kolkata
+    ports:
+      - target: 5055
+        published: 5055
+        protocol: tcp
+        mode: ingress
+    volumes:
+      - /home/homeserver/app_configs/jellyseerr_config:/app/config
+    networks:
+      - proxy-net
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      update_config:
+        order: stop-first
+      placement:
+        constraints:
+          - node.role == manager
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.jellyseerr-https.rule=Host(`requests.jedarabale.space`)"
+        - "traefik.http.routers.jellyseerr-https.entrypoints=websecure"
+        - "traefik.http.routers.jellyseerr-https.service=jellyseerr-service"
+        - "traefik.http.routers.jellyseerr-https.tls.certresolver=cloudflare"
+        - "traefik.http.services.jellyseerr-service.loadbalancer.server.port=5055"
+
+networks:
+  proxy-net:
+    external: true

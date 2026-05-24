@@ -1,0 +1,40 @@
+version: '3.8'
+services:
+  lidarr:
+    image: ghcr.io/hotio/lidarr
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+      - UMASK=002
+      - WEBUI_PORTS=8686/tcp
+    volumes:
+      - /home/homeserver/app_configs/lidarr_config:/config
+      - /mnt/fastmedia:/data
+    ports:
+      - target: 8686
+        published: 8686
+        protocol: tcp
+        mode: ingress
+    networks:
+      - proxy-net
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      update_config:
+        order: stop-first
+      placement:
+        constraints:
+          - node.role == manager
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.lidarr-https.rule=Host(`lidarr.jedarabale.space`)"
+        - "traefik.http.routers.lidarr-https.entrypoints=websecure"
+        - "traefik.http.routers.lidarr-https.service=lidarr-service"
+        - "traefik.http.routers.lidarr-https.tls.certresolver=cloudflare"
+        - "traefik.http.services.lidarr-service.loadbalancer.server.port=8686"
+
+networks:
+  proxy-net:
+    external: true

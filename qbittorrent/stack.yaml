@@ -1,0 +1,43 @@
+version: '3.8'
+services:
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+      - WEBUI_PORT=8123
+      - TORRENTING_PORT=6881
+    volumes:
+      - /home/homeserver/PROD/qbittorrent/config:/config
+      - /mnt/fastmedia/torrents:/downloads
+    ports:
+      - target: 8123
+        published: 8123
+        protocol: tcp
+        mode: ingress
+    networks:
+      - proxy-net
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      update_config:
+        order: stop-first
+      placement:
+        constraints:
+          - node.role == manager
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.qbittorrent-https.rule=Host(`qbit.jedarabale.space`)"
+        - "traefik.http.routers.qbittorrent-https.entrypoints=websecure"
+        - "traefik.http.routers.qbittorrent-https.service=qbittorrent-service"
+        - "traefik.http.routers.qbittorrent-https.tls.certresolver=cloudflare"
+        - "traefik.http.services.qbittorrent-service.loadbalancer.server.port=8123"
+        - "traefik.http.routers.qbittorrent-https.middlewares=qbittorrent-headers"
+        - "traefik.http.middlewares.qbittorrent-headers.headers.referrerpolicy=no-referrer-when-downgrade"
+        - "traefik.http.middlewares.qbittorrent-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
+
+networks:
+  proxy-net:
+    external: true

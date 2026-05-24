@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  tunnel:
+    image: cloudflare/cloudflared:latest
+    hostname: cloudflare-tunnel
+    command: tunnel --no-autoupdate run
+    environment:
+      # Swarm will inject the value from your shell here during deployment
+      - TUNNEL_TOKEN=${SECURE_CLOUDFLARE_TUNNEL_TOKEN}
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /home/homeserver/PROD/secure-cloudflare-tunnel/config/hosts:/etc/hosts
+    networks:
+      - proxy-net
+    deploy:
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
+      restart_policy:
+        condition: on-failure
+
+networks:
+  proxy-net:
+    external: true

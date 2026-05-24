@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+  filebrowser:
+    image: filebrowser/filebrowser:latest
+    environment:
+      - PUID=1000
+      - PGID=1000
+    volumes:
+      - /:/srv
+      - /local/docker/filebrowser/filebrowser.db:/database.db
+      - /local/docker/filebrowser/filebrowser.json:/.filebrowser.json
+    ports:
+      - target: 80
+        published: 8001
+        protocol: tcp
+        mode: ingress
+    networks:
+      - proxy-net
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+          - node.role == manager
+# We use the existing proxy-net overlay network
+networks:
+  proxy-net:
+    external: true

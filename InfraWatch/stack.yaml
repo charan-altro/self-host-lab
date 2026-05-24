@@ -1,0 +1,94 @@
+version: '3.8'
+services:
+  netdata:
+    image: netdata/netdata:latest
+    hostname: homeserver
+    ports:
+      - target: 19999
+        published: 19999
+        protocol: tcp
+        mode: ingress
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /sys/class/thermal:/sys/class/thermal:ro
+      - netdata_data:/var/lib/netdata
+    environment:
+      - HOST_PROC=/host/proc
+      - HOST_SYS=/host/sys
+      - PGID=1000
+      - memory.dedicated=20M
+    networks:
+      - proxy-net
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+          - node.role == manager
+      resources:
+        limits:
+          memory: 50M
+        reservations:
+          memory: 20M
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.netdata.rule=Host(`netdata.jedarabale.space`)"
+        - "traefik.http.routers.netdata.entrypoints=websecure"
+        - "traefik.http.routers.netdata.tls.certresolver=cloudflare"
+        - "traefik.http.services.netdata.loadbalancer.server.port=19999"
+
+  beszel:
+    image: henrygd/beszel:latest
+    ports:
+      - target: 8090
+        published: 8090
+        protocol: tcp
+        mode: ingress
+    volumes:
+      - /home/homeserver/PROD/InfraWatch/beszel_data:/beszel_data
+      - /home/homeserver/PROD/InfraWatch/beszel_socket:/beszel_socket
+    networks:
+      - proxy-net
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+          - node.role == manager
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.beszel.rule=Host(`beszel.jedarabale.space`)"
+        - "traefik.http.services.beszel.loadbalancer.server.port=8090"
+
+  beszel-agent:
+    image: henrygd/beszel-agent:latest
+    volumes:
+      - /home/homeserver/PROD/InfraWatch/beszel_agent_data:/var/lib/beszel-agent
+      - /home/homeserver/PROD/InfraWatch/beszel_socket:/beszel_socket
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      - LISTEN=/beszel_socket/beszel.sock
+      - HUB_URL=http://beszel:8090
+      - TOKEN=cdf7-5f13e250c-322ef-efb26d526
+      - KEY=ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBsTUR8zMGgy52arGf6tenr06Y3ymEPNLdrKn790eftF
+    networks:
+      - proxy-net
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+          - node.role == manager
+
+networks:
+  proxy-net:
+    external: true
+
+volumes:
+  netdata_data:

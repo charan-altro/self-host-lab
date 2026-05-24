@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+    volumes:
+      - /home/homeserver/app_configs/sonarr_config:/config
+      - /mnt/fastmedia:/data
+      - /mnt/fastmedia/torrents:/downloads
+    ports:
+      - target: 8989
+        published: 8989
+        protocol: tcp
+        mode: ingress
+    networks:
+      - proxy-net
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      update_config:
+        order: stop-first
+      placement:
+        constraints:
+          - node.role == manager
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.sonarr-https.rule=Host(`sonarr.jedarabale.space`)"
+        - "traefik.http.routers.sonarr-https.entrypoints=websecure"
+        - "traefik.http.routers.sonarr-https.service=sonarr-service"
+        - "traefik.http.routers.sonarr-https.tls.certresolver=cloudflare"
+        - "traefik.http.services.sonarr-service.loadbalancer.server.port=8989"
+
+networks:
+  proxy-net:
+    external: true

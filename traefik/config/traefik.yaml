@@ -40,10 +40,10 @@ serversTransport:
   insecureSkipVerify: true
 
 providers:
-  docker:
+  swarm: # <--- Use the Swarm-specific provider
+    endpoint: "unix:///var/run/docker.sock"
     exposedByDefault: false
-    endpoint: 'unix:///var/run/docker.sock'
-    watch: true
+    network: proxy-net
   file:
     directory: /etc/traefik/conf/
     watch: true

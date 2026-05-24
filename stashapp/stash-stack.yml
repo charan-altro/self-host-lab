@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  stash:
+    image: stashapp/stash:latest
+    ports:
+      - target: 9999
+        published: 9999
+        protocol: tcp
+        mode: ingress
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "10"
+        max-size: "2m"
+    environment:
+      - STASH_STASH=/data/
+      - STASH_GENERATED=/generated/
+      - STASH_METADATA=/metadata/
+      - STASH_CACHE=/cache/
+      - STASH_PORT=9999
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      # Points to your external drive for all heavy writes
+      - /mnt/fastmedia/stashapp/config:/root/.stash
+      - /mnt/fastmedia/stashapp/data:/data
+      - /mnt/fastmedia/stashapp/metadata:/metadata
+      - /mnt/fastmedia/stashapp/cache:/cache
+      - /mnt/fastmedia/stashapp/blobs:/blobs
+      - /mnt/fastmedia/stashapp/generated:/generated
+      # Your actual media files
+      - /mnt/fastmedia:/media
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: any
+      placement:
+        constraints:
+          # This ensures it only runs on the node where the HDD is plugged in
+          - node.role == manager

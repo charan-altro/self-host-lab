@@ -1,0 +1,40 @@
+version: '3.8'
+services:
+  whisparr:
+    image: ghcr.io/hotio/whisparr:nightly
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+      - UMASK=002
+      - WEBUI_PORTS=6969/tcp
+    volumes:
+      - /home/homeserver/app_configs/whisparr_config:/config
+      - /mnt/fastmedia:/data
+    ports:
+      - target: 6969
+        published: 6969
+        protocol: tcp
+        mode: ingress
+    networks:
+      - proxy-net
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      update_config:
+        order: stop-first
+      placement:
+        constraints:
+          - node.role == manager
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.whisparr-https.rule=Host(`whisparr.jedarabale.space`)"
+        - "traefik.http.routers.whisparr-https.entrypoints=websecure"
+        - "traefik.http.routers.whisparr-https.service=whisparr-service"
+        - "traefik.http.routers.whisparr-https.tls.certresolver=cloudflare"
+        - "traefik.http.services.whisparr-service.loadbalancer.server.port=6969"
+
+networks:
+  proxy-net:
+    external: true

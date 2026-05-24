@@ -1,5 +1,6 @@
 config.php
 secrets/
+
 # Ignore log files and backups
 *.log
 *.bak
@@ -11,6 +12,15 @@ secrets/
 *.db-shm
 *.db-wal
 *.sqlite
+*.torrent
+*.fastresume
 
-# Ignore specific root-owned or problematic files
-pihole/etc-pihole/logrotate
+# Ignore application runtime and data folders
+**/etc-pihole/
+**/qbittorrent/config/
+**/InfraWatch/beszel_agent_data/
+**/InfraWatch/beszel_data/
+**/InfraWatch/beszel_socket/
+**/pihole/etc-pihole/
+**/qbittorrent/config/
+**/BT_backup/

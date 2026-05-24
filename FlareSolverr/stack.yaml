@@ -1,0 +1,46 @@
+version: '3.8'
+services:
+  tor-proxy:
+    image: dperson/torproxy:latest
+    ports:
+      - target: 9050
+        published: 1080
+        protocol: tcp
+        mode: ingress
+    networks:
+      - proxy-net
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+          - node.role == manager
+
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    environment:
+      - LOG_LEVEL=info
+      - LOG_HTML=false
+      - CAPTCHA_SOLVER=none
+      - TZ=Asia/Kolkata
+      - ALL_PROXY=http://tor-proxy:8118
+      - BROWSER_TIMEOUT=120000
+    ports:
+      - target: 8191
+        published: 8191
+        protocol: tcp
+        mode: ingress
+    networks:
+      - proxy-net
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+          - node.role == manager
+
+networks:
+  proxy-net:
+    external: true

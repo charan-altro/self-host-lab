@@ -1,0 +1,66 @@
+version: '3.8'
+services:
+  tdarr:
+    image: ghcr.io/haveagitgat/tdarr:latest
+    environment:
+      - TZ=Asia/Kolkata
+      - PUID=1000
+      - PGID=1000
+      - serverIP=0.0.0.0
+    volumes:
+      - /home/homeserver/app_configs/tdarr/server:/app/server
+      - /home/homeserver/app_configs/tdarr/configs:/app/configs
+      - /home/homeserver/app_configs/tdarr/logs:/app/logs
+      - /mnt/fastmedia:/data
+      - /home/homeserver/app_configs/tdarr/transcode_cache:/temp
+    ports:
+      - target: 8265
+        published: 8265
+        protocol: tcp
+        mode: ingress
+      - target: 8266
+        published: 8266
+        protocol: tcp
+        mode: ingress
+    networks:
+      - proxy-net
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      update_config:
+        order: stop-first
+      placement:
+        constraints:
+          - node.role == manager
+
+  tdarr-node-pi:
+    image: ghcr.io/haveagitgat/tdarr_node:latest
+    environment:
+      - TZ=Asia/Kolkata
+      - PUID=1000
+      - PGID=1000
+      - nodeID=PiNode
+      - nodeIP=0.0.0.0
+      - serverIP=192.168.1.9
+      - serverPort=8266
+    volumes:
+      - /home/homeserver/app_configs/tdarr/node_configs:/app/configs
+      - /home/homeserver/app_configs/tdarr/logs:/app/logs
+      - /mnt/fastmedia:/data
+      - /home/homeserver/app_configs/tdarr/transcode_cache:/temp
+    networks:
+      - proxy-net
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      update_config:
+        order: stop-first
+      placement:
+        constraints:
+          - node.role == manager
+
+networks:
+  proxy-net:
+    external: true
